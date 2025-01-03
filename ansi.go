@@ -42,6 +42,7 @@ const (
 )
 
 const (
+	// ANSI escape code
 	csi = "\x1b["
 	// Clears from the cursor to the end of the screen.
 	ClearFromCursorToEndScreen = csi + "0J"
@@ -70,31 +71,28 @@ const (
 	ShowCursor = csi + "?25h"
 
 	// Text Formatting
-
-	Reset      = csi + "0m"
-	Bold       = csi + "1m"
-	Dim        = csi + "2m"
-	Italic     = csi + "3m"
-	Underline  = csi + "4m"
-	SlowBlink  = csi + "5m"
-	RapidBlink = csi + "6m"
-	Reverse    = csi + "7m"
-	Hidden     = csi + "8m"
-	Strike     = csi + "9m"
+	Reset           = csi + "0m"
+	Bold            = csi + "1m"
+	Dim             = csi + "2m"
+	Italic          = csi + "3m"
+	Underline       = csi + "4m"
+	SlowBlink       = csi + "5m"
+	RapidBlink      = csi + "6m"
+	Reverse         = csi + "7m"
+	Hidden          = csi + "8m"
+	Strike          = csi + "9m"
+	DoubleUnderline = csi + "21m"
 
 	// Reset Formatting
-
-	DoubleUnderline = csi + "21m"
-	ResetIntensity  = csi + "22m"
-	ResetItalic     = csi + "23m"
-	ResetUnderline  = csi + "24m"
-	ResetBlink      = csi + "25m"
-	ResetReverse    = csi + "27m"
-	ResetHidden     = csi + "28m"
-	ResetStrike     = csi + "29m"
+	ResetIntensity = csi + "22m"
+	ResetItalic    = csi + "23m"
+	ResetUnderline = csi + "24m"
+	ResetBlink     = csi + "25m"
+	ResetReverse   = csi + "27m"
+	ResetHidden    = csi + "28m"
+	ResetStrike    = csi + "29m"
 
 	// Foreground Color
-
 	Black   = csi + "30m"
 	Red     = csi + "31m"
 	Green   = csi + "32m"
@@ -105,7 +103,6 @@ const (
 	White   = csi + "37m"
 
 	// Background Color
-
 	BlackBg   = csi + "40m"
 	RedBg     = csi + "41m"
 	GreenBg   = csi + "42m"
@@ -117,7 +114,6 @@ const (
 	DefaultBg = csi + "49m"
 
 	// Intense Foreground Color
-
 	IntenseBlack   = csi + "90m"
 	IntenseRed     = csi + "91m"
 	IntenseGreen   = csi + "92m"
@@ -128,7 +124,6 @@ const (
 	IntenseWhite   = csi + "97m"
 
 	// Intense Background Color
-
 	IntenseBlackBg   = csi + "100m"
 	IntenseRedBg     = csi + "101m"
 	IntenseGreenBg   = csi + "102m"
