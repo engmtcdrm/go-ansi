@@ -16,9 +16,9 @@ var (
 	CursorPreviousLine = CursorPreviousLineN(1)
 
 	// Scroll the screen up one row (line).
-	ScrollNext = ScrollUpN(1)
+	ScrollUp1 = ScrollUpN(1)
 	// Scroll the screen down one row (line).
-	ScrollPrev = ScrollDownN(1)
+	ScrollDown1 = ScrollDownN(1)
 )
 
 // ANSI color codes.
@@ -231,6 +231,6 @@ func ScrollDownN(n int) string {
 
 // StripCodes removes all ANSI escape codes from the input string.
 func StripCodes(input string) string {
-	re := regexp.MustCompile(`\x1b\[[;?0-9]*[a-zA-Z]`)
+	re := regexp.MustCompile(`(\x1b|\033|\\u001b)\[[;?0-9]*[a-zA-Z]`)
 	return re.ReplaceAllString(input, "")
 }
