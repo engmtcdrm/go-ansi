@@ -1,4 +1,30 @@
-# ansi
+## Description
+
+The `ansi` package provides a set of constants and functions for generating ANSI escape codes, which are used to control text formatting, color, and other output options on text terminals. These escape codes can be used to manipulate the appearance of text in terminal emulators, such as changing text color, moving the cursor, clearing parts of the screen, and more.
+
+Key Features:
+
+- Text Formatting: Apply styles like bold, italic, underline, blink, reverse, hidden, and strike-through to text.
+- Color Control: Set foreground and background colors using standard and intense colors.
+- Cursor Movement: Move the cursor to specific positions, save and restore cursor positions, and hide or show the cursor.
+- Screen Clearing: Clear parts of the screen or entire lines.
+- Scrolling: Scroll the screen up or down by a specified number of lines.
+- 8-bit Color Support: Set foreground and background colors using 8-bit color codes.
+- 24-bit Color Support: Set foreground and background colors using 24-bit color codes.
+
+## Installation
+
+ansi is available using the standard `go get` command.
+
+Install by running:
+
+    go get github.com/engmtcdrm/go-ansi
+
+Run tests by running:
+
+    go test github.com/engmtcdrm/go-ansi
+
+## Usage
 
 ```go
 import "github.com/engmtcdrm/go-ansi"
