@@ -76,26 +76,29 @@ const (
     // Show the cursor
     ShowCursor = csi + "?25h"
 
-    Reset      = csi + "0m"
-    Bold       = csi + "1m"
-    Dim        = csi + "2m"
-    Italic     = csi + "3m"
-    Underline  = csi + "4m"
-    SlowBlink  = csi + "5m"
-    RapidBlink = csi + "6m"
-    Reverse    = csi + "7m"
-    Hidden     = csi + "8m"
-    Strike     = csi + "9m"
-
+    // Text Formatting
+    Reset           = csi + "0m"
+    Bold            = csi + "1m"
+    Dim             = csi + "2m"
+    Italic          = csi + "3m"
+    Underline       = csi + "4m"
+    SlowBlink       = csi + "5m"
+    RapidBlink      = csi + "6m"
+    Reverse         = csi + "7m"
+    Hidden          = csi + "8m"
+    Strike          = csi + "9m"
     DoubleUnderline = csi + "21m"
-    ResetIntensity  = csi + "22m"
-    ResetItalic     = csi + "23m"
-    ResetUnderline  = csi + "24m"
-    ResetBlink      = csi + "25m"
-    ResetReverse    = csi + "27m"
-    ResetHidden     = csi + "28m"
-    ResetStrike     = csi + "29m"
 
+    // Reset Formatting
+    ResetIntensity = csi + "22m"
+    ResetItalic    = csi + "23m"
+    ResetUnderline = csi + "24m"
+    ResetBlink     = csi + "25m"
+    ResetReverse   = csi + "27m"
+    ResetHidden    = csi + "28m"
+    ResetStrike    = csi + "29m"
+
+    // Foreground Color
     Black   = csi + "30m"
     Red     = csi + "31m"
     Green   = csi + "32m"
@@ -105,6 +108,7 @@ const (
     Cyan    = csi + "36m"
     White   = csi + "37m"
 
+    // Background Color
     BlackBg   = csi + "40m"
     RedBg     = csi + "41m"
     GreenBg   = csi + "42m"
@@ -115,6 +119,7 @@ const (
     WhiteBg   = csi + "47m"
     DefaultBg = csi + "49m"
 
+    // Intense Foreground Color
     IntenseBlack   = csi + "90m"
     IntenseRed     = csi + "91m"
     IntenseGreen   = csi + "92m"
@@ -124,6 +129,7 @@ const (
     IntenseCyan    = csi + "96m"
     IntenseWhite   = csi + "97m"
 
+    // Intense Background Color
     IntenseBlackBg   = csi + "100m"
     IntenseRedBg     = csi + "101m"
     IntenseGreenBg   = csi + "102m"
@@ -149,9 +155,9 @@ var (
     CursorPreviousLine = CursorPreviousLineN(1)
 
     // Scroll the screen up one row (line).
-    ScrollNext = ScrollUpN(1)
+    ScrollUp1 = ScrollUpN(1)
     // Scroll the screen down one row (line).
-    ScrollPrev = ScrollDownN(1)
+    ScrollDown1 = ScrollDownN(1)
 )
 ```
 
