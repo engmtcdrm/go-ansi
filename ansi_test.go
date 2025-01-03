@@ -151,10 +151,19 @@ func TestScroll(t *testing.T) {
 }
 
 func TestStripCodes(t *testing.T) {
-	input := "\x1b[31mHello\x1b[0m"
-	expected := "Hello"
-	result := ansi.StripCodes(input)
-	if result != expected {
-		t.Errorf("StripCodes(%q) = %q; want %q", input, result, expected)
+	tests := []struct {
+		input    string
+		expected string
+	}{
+		{"\x1b[31mHello\x1b[0m", "Hello"},
+		{"\033[31mHello\033[0m", "Hello"},
+		{"\u001b[31mHello\u001b[0m", "Hello"},
+	}
+
+	for _, test := range tests {
+		result := ansi.StripCodes(test.input)
+		if result != test.expected {
+			t.Errorf("StripCodes(%q) = %q; want %q", test.input, result, test.expected)
+		}
 	}
 }
