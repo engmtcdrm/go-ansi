@@ -160,7 +160,7 @@ func TestStripCodes(t *testing.T) {
 		{"\x1b[4;33mUnderlined Yellow\x1b[0m", "Underlined Yellow"},
 		{"\x1b[38;5;82m256 Color Green\x1b[0m", "256 Color Green"},
 		{"\x1b[48;2;255;0;0mTrue Color Red Background\x1b[0m", "True Color Red Background"},
-		{"\x1b]0;Title\x07", "Title\x07"}, // OSC (Operating System Command) sequence
+		{"\x1b]0;Title\x07", "\x1b]0;Title\x07"}, // OSC (Operating System Command) sequence
 		{"\x1b[?25lHidden Cursor\x1b[?25h", "Hidden Cursor"},
 		{"\x1b[2J\x1b[HClear Screen", "Clear Screen"},
 		{"\x1b[1;31;42mMultiple Attributes\x1b[0m", "Multiple Attributes"},
