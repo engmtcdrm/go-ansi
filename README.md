@@ -18,11 +18,15 @@ ansi is available using the standard `go get` command.
 
 Install by running:
 
-    go get github.com/engmtcdrm/go-ansi
+```sh
+go get github.com/engmtcdrm/go-ansi
+```
 
 Run tests by running:
 
-    go test github.com/engmtcdrm/go-ansi
+```sh
+go test github.com/engmtcdrm/go-ansi
+```
 
 ## Usage
 
