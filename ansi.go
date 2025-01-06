@@ -42,7 +42,7 @@ const (
 )
 
 const (
-	// ANSI escape code
+	// ANSI control sequence introducer
 	csi = "\x1b["
 	// Clears from the cursor to the end of the screen.
 	ClearFromCursorToEndScreen = csi + "0J"
@@ -226,6 +226,6 @@ func ScrollDownN(n int) string {
 
 // StripCodes removes all ANSI escape codes from the input string.
 func StripCodes(input string) string {
-	re := regexp.MustCompile(`(\x1b|\033|\\u001b)\[[;?0-9]*[a-zA-Z]`)
+	re := regexp.MustCompile(`\x1b\[[;?0-9]*[a-zA-Z]`)
 	return re.ReplaceAllString(input, "")
 }
