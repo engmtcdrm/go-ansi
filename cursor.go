@@ -37,7 +37,7 @@ func CursorDown(n int) string {
 // CursorForward moves the cursor forward n columns.
 // If n is negative, it returns an empty string.
 func CursorForward(n int) string {
-	if n < 0 {
+	if n < 1 {
 		return ""
 	}
 	return csi + strconv.Itoa(n) + "C"
@@ -46,7 +46,7 @@ func CursorForward(n int) string {
 // CursorBackward moves the cursor backward n columns.
 // If n is negative, it returns an empty string.
 func CursorBackward(n int) string {
-	if n < 0 {
+	if n < 1 {
 		return ""
 	}
 	return csi + strconv.Itoa(n) + "D"
@@ -55,7 +55,7 @@ func CursorBackward(n int) string {
 // CursorNextLine moves the cursor down n rows (lines).
 // If n is negative, it returns an empty string.
 func CursorNextLineN(n int) string {
-	if n < 0 {
+	if n < 1 {
 		return ""
 	}
 	return csi + strconv.Itoa(n) + "E"
@@ -64,7 +64,7 @@ func CursorNextLineN(n int) string {
 // CursorPreviousLine moves the cursor up n rows (lines).
 // If n is negative, it returns an empty string.
 func CursorPreviousLineN(n int) string {
-	if n < 0 {
+	if n < 1 {
 		return ""
 	}
 	return csi + strconv.Itoa(n) + "F"

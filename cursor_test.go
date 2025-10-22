@@ -31,10 +31,10 @@ func TestCursorMovement(t *testing.T) {
 		// Edge cases - zero values
 		{"CursorUp zero", ansi.CursorUp, 0, ""},
 		{"CursorDown zero", ansi.CursorDown, 0, ""},
-		{"CursorForward zero", ansi.CursorForward, 0, "\x1b[0C"},
-		{"CursorBackward zero", ansi.CursorBackward, 0, "\x1b[0D"},
-		{"CursorNextLineN zero", ansi.CursorNextLineN, 0, "\x1b[0E"},
-		{"CursorPreviousLineN zero", ansi.CursorPreviousLineN, 0, "\x1b[0F"},
+		{"CursorForward zero", ansi.CursorForward, 0, ""},
+		{"CursorBackward zero", ansi.CursorBackward, 0, ""},
+		{"CursorNextLineN zero", ansi.CursorNextLineN, 0, ""},
+		{"CursorPreviousLineN zero", ansi.CursorPreviousLineN, 0, ""},
 		{"CursorHorizontalAbsolute zero", ansi.CursorHorizontalAbsolute, 0, ""},
 		// Large values
 		{"CursorUp large", ansi.CursorUp, 100, "\x1b[100A"},
