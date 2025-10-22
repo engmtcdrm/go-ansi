@@ -257,7 +257,7 @@ func Background8Bit(color int) string
 func CursorBackward(n int) string
 ```
 
-CursorBackward moves the cursor backward n columns. If n is negative, it returns an empty string.
+CursorBackward moves the cursor backward n columns. If n is less than 0, it returns an empty string.
 
 <a name="CursorDown"></a>
 ## func [CursorDown](<https://github.com/engmtcdrm/go-ansi/blob/main/cursor.go#L30>)
@@ -266,7 +266,7 @@ CursorBackward moves the cursor backward n columns. If n is negative, it returns
 func CursorDown(n int) string
 ```
 
-CursorDown moves the cursor down n rows \(lines\). If n is negative, it returns an empty string.
+CursorDown moves the cursor down n rows \(lines\). If n is less than 0, it returns an empty string.
 
 <a name="CursorForward"></a>
 ## func [CursorForward](<https://github.com/engmtcdrm/go-ansi/blob/main/cursor.go#L39>)
@@ -275,7 +275,7 @@ CursorDown moves the cursor down n rows \(lines\). If n is negative, it returns 
 func CursorForward(n int) string
 ```
 
-CursorForward moves the cursor forward n columns. If n is negative, it returns an empty string.
+CursorForward moves the cursor forward n columns. If n is less than 0, it returns an empty string.
 
 <a name="CursorHorizontalAbsolute"></a>
 ## func [CursorHorizontalAbsolute](<https://github.com/engmtcdrm/go-ansi/blob/main/cursor.go#L75>)
@@ -284,7 +284,7 @@ CursorForward moves the cursor forward n columns. If n is negative, it returns a
 func CursorHorizontalAbsolute(n int) string
 ```
 
-CursorHorizontalAbsolute moves the cursor to the nth column. If n is negative, it returns an empty string.
+CursorHorizontalAbsolute moves the cursor to the nth column. If n is less than 0, it returns an empty string.
 
 <a name="CursorNextLineN"></a>
 ## func [CursorNextLineN](<https://github.com/engmtcdrm/go-ansi/blob/main/cursor.go#L57>)
@@ -293,7 +293,7 @@ CursorHorizontalAbsolute moves the cursor to the nth column. If n is negative, i
 func CursorNextLineN(n int) string
 ```
 
-CursorNextLine moves the cursor down n rows \(lines\). If n is negative, it returns an empty string.
+CursorNextLine moves the cursor down n rows \(lines\). If n is less than 0, it returns an empty string.
 
 <a name="CursorPosition"></a>
 ## func [CursorPosition](<https://github.com/engmtcdrm/go-ansi/blob/main/cursor.go#L84>)
@@ -311,7 +311,7 @@ CursorPosition moves the cursor to the specified position of row \(line\) and co
 func CursorPreviousLineN(n int) string
 ```
 
-CursorPreviousLine moves the cursor up n rows \(lines\). If n is negative, it returns an empty string.
+CursorPreviousLine moves the cursor up n rows \(lines\). If n is less than 0, it returns an empty string.
 
 <a name="CursorUp"></a>
 ## func [CursorUp](<https://github.com/engmtcdrm/go-ansi/blob/main/cursor.go#L21>)
@@ -320,7 +320,7 @@ CursorPreviousLine moves the cursor up n rows \(lines\). If n is negative, it re
 func CursorUp(n int) string
 ```
 
-CursorUp moves the cursor up n rows \(lines\). If n is negative, it returns an empty string.
+CursorUp moves the cursor up n rows \(lines\). If n is less than 0, it returns an empty string.
 
 <a name="Foreground24Bit"></a>
 ## func [Foreground24Bit](<https://github.com/engmtcdrm/go-ansi/blob/main/colors.go#L99>)
