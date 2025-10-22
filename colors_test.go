@@ -15,6 +15,12 @@ func TestForeground8Bit(t *testing.T) {
 		{255, "\x1b[38;5;255m"},
 		{-1, ""},
 		{256, ""},
+		// Additional edge cases
+		{128, "\x1b[38;5;128m"}, // Mid-range value
+		{1, "\x1b[38;5;1m"},     // Minimum valid positive
+		{254, "\x1b[38;5;254m"}, // Maximum - 1
+		{-100, ""},              // Large negative
+		{1000, ""},              // Large positive
 	}
 
 	for _, test := range tests {
@@ -34,6 +40,12 @@ func TestBackground8Bit(t *testing.T) {
 		{255, "\x1b[48;5;255m"},
 		{-1, ""},
 		{256, ""},
+		// Additional edge cases
+		{128, "\x1b[48;5;128m"}, // Mid-range value
+		{1, "\x1b[48;5;1m"},     // Minimum valid positive
+		{254, "\x1b[48;5;254m"}, // Maximum - 1
+		{-100, ""},              // Large negative
+		{1000, ""},              // Large positive
 	}
 
 	for _, test := range tests {
@@ -57,6 +69,16 @@ func TestForeground24Bit(t *testing.T) {
 		{256, 0, 0, ""},
 		{0, 256, 0, ""},
 		{0, 0, 256, ""},
+		// Additional edge cases
+		{128, 64, 32, "\x1b[38;2;128;64;32m"},     // Mid-range values
+		{255, 0, 0, "\x1b[38;2;255;0;0m"},         // Pure red
+		{0, 255, 0, "\x1b[38;2;0;255;0m"},         // Pure green
+		{0, 0, 255, "\x1b[38;2;0;0;255m"},         // Pure blue
+		{1, 1, 1, "\x1b[38;2;1;1;1m"},             // Minimum valid positive
+		{254, 254, 254, "\x1b[38;2;254;254;254m"}, // Maximum - 1
+		{-1, -1, -1, ""},                          // All negative
+		{256, 256, 256, ""},                       // All over max
+		{255, 128, 0, "\x1b[38;2;255;128;0m"},     // Orange
 	}
 
 	for _, test := range tests {
@@ -80,6 +102,16 @@ func TestBackground24Bit(t *testing.T) {
 		{256, 0, 0, ""},
 		{0, 256, 0, ""},
 		{0, 0, 256, ""},
+		// Additional edge cases
+		{128, 64, 32, "\x1b[48;2;128;64;32m"},     // Mid-range values
+		{255, 0, 0, "\x1b[48;2;255;0;0m"},         // Pure red
+		{0, 255, 0, "\x1b[48;2;0;255;0m"},         // Pure green
+		{0, 0, 255, "\x1b[48;2;0;0;255m"},         // Pure blue
+		{1, 1, 1, "\x1b[48;2;1;1;1m"},             // Minimum valid positive
+		{254, 254, 254, "\x1b[48;2;254;254;254m"}, // Maximum - 1
+		{-1, -1, -1, ""},                          // All negative
+		{256, 256, 256, ""},                       // All over max
+		{255, 128, 0, "\x1b[48;2;255;128;0m"},     // Orange
 	}
 
 	for _, test := range tests {
