@@ -86,7 +86,7 @@ func Foreground8Bit(color int) string {
 }
 
 // 8-bit background color
-// color must be between 0 and 255 othrewise it will return an empty string.
+// color must be between 0 and 255 otherwise it will return an empty string.
 func Background8Bit(color int) string {
 	if color < 0 || color > 255 {
 		return ""

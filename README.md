@@ -248,7 +248,7 @@ func Background24Bit(r, g, b int) string
 func Background8Bit(color int) string
 ```
 
-8\-bit background color color must be between 0 and 255 othrewise it will return an empty string.
+8\-bit background color color must be between 0 and 255 otherwise it will return an empty string.
 
 <a name="CursorBackward"></a>
 ## func [CursorBackward](<https://github.com/engmtcdrm/go-ansi/blob/main/cursor.go#L48>)
