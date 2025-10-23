@@ -19,8 +19,8 @@ func TestScroll(t *testing.T) {
 		{"ScrollUpN negative", ansi.ScrollUpN, -1, ""},
 		{"ScrollDownN negative", ansi.ScrollDownN, -1, ""},
 		// Edge cases - zero values
-		{"ScrollUpN zero", ansi.ScrollUpN, 0, "\x1b[0S"},
-		{"ScrollDownN zero", ansi.ScrollDownN, 0, "\x1b[0T"},
+		{"ScrollUpN zero", ansi.ScrollUpN, 0, ""},
+		{"ScrollDownN zero", ansi.ScrollDownN, 0, ""},
 		// Large values
 		{"ScrollUpN large", ansi.ScrollUpN, 100, "\x1b[100S"},
 		{"ScrollDownN large", ansi.ScrollDownN, 999, "\x1b[999T"},

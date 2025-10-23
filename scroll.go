@@ -8,19 +8,35 @@ var (
 )
 
 // ScrollUp scrolls the screen up n rows (lines).
-// If n is negative, it returns an empty string.
-func ScrollUpN(n int) string {
-	if n < 0 {
+// If n is less than 1, it returns an empty string.
+func ScrollUp(n int) string {
+	if n < 1 {
 		return ""
 	}
 	return csi + strconv.Itoa(n) + "S"
 }
 
-// ScrollDownN scrolls the screen down n rows (lines).
-// If n is negative, it returns an empty string.
-func ScrollDownN(n int) string {
-	if n < 0 {
+// ScrollDown scrolls the screen down n rows (lines).
+// If n is less than 1, it returns an empty string.
+func ScrollDown(n int) string {
+	if n < 1 {
 		return ""
 	}
 	return csi + strconv.Itoa(n) + "T"
+}
+
+// ScrollUpN scrolls the screen up n rows (lines).
+// If n is less than 1, it returns an empty string.
+//
+// Obsolete: Use [ScrollUp] instead. This will be removed in v2.0.0.
+func ScrollUpN(n int) string {
+	return ScrollUp(n)
+}
+
+// ScrollDownN scrolls the screen down n rows (lines).
+// If n is less than 1, it returns an empty string.
+//
+// Obsolete: Use [ScrollDown] instead. This will be removed in v2.0.0.
+func ScrollDownN(n int) string {
+	return ScrollDown(n)
 }
