@@ -18,3 +18,8 @@ func Strip(input string) string {
 func StripCodes(input string) string {
 	return Strip(input)
 }
+
+// colorInRange checks if the color value is between 0 and 255.
+func colorInRange(color int) bool {
+	return color >= 0 && color <= 255
+}

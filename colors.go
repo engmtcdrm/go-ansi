@@ -33,6 +33,7 @@ const (
 	Magenta = csi + "35m" // Magenta foreground color.
 	Cyan    = csi + "36m" // Cyan foreground color.
 	White   = csi + "37m" // White foreground color.
+	Default = csi + "39m" // Default foreground color.
 )
 
 // Background Color
@@ -79,35 +80,39 @@ const (
 // 8-bit foreground color
 // color must be between 0 and 255 otherwise it will return an empty string.
 func Foreground8Bit(color int) string {
-	if color < 0 || color > 255 {
+	if !colorInRange(color) {
 		return ""
 	}
+
 	return csi + "38;5;" + strconv.Itoa(color) + "m"
 }
 
 // 8-bit background color
 // color must be between 0 and 255 otherwise it will return an empty string.
 func Background8Bit(color int) string {
-	if color < 0 || color > 255 {
+	if !colorInRange(color) {
 		return ""
 	}
+
 	return csi + "48;5;" + strconv.Itoa(color) + "m"
 }
 
 // 24-bit foreground color
 // r, g, b must be between 0 and 255 otherwise it will return an empty string.
 func Foreground24Bit(r, g, b int) string {
-	if r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255 {
+	if !colorInRange(r) || !colorInRange(g) || !colorInRange(b) {
 		return ""
 	}
+
 	return csi + "38;2;" + strconv.Itoa(r) + ";" + strconv.Itoa(g) + ";" + strconv.Itoa(b) + "m"
 }
 
 // 24-bit background color
 // r, g, b must be between 0 and 255 otherwise it will return an empty string.
 func Background24Bit(r, g, b int) string {
-	if r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255 {
+	if !colorInRange(r) || !colorInRange(g) || !colorInRange(b) {
 		return ""
 	}
+
 	return csi + "48;2;" + strconv.Itoa(r) + ";" + strconv.Itoa(g) + ";" + strconv.Itoa(b) + "m"
 }
