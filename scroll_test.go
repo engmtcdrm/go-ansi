@@ -4,42 +4,49 @@ import (
 	"testing"
 
 	"github.com/engmtcdrm/go-ansi"
+	"github.com/stretchr/testify/require"
 )
 
-func TestScroll(t *testing.T) {
-	tests := []struct {
-		name     string
-		function func(int) string
-		arg      int
-		expected string
-	}{
-		{"ScrollUpN", ansi.ScrollUpN, 1, "\x1b[1S"},
-		{"ScrollDownN", ansi.ScrollDownN, 1, "\x1b[1T"},
-		// Edge cases - negative values
-		{"ScrollUpN negative", ansi.ScrollUpN, -1, ""},
-		{"ScrollDownN negative", ansi.ScrollDownN, -1, ""},
-		// Edge cases - zero values
-		{"ScrollUpN zero", ansi.ScrollUpN, 0, ""},
-		{"ScrollDownN zero", ansi.ScrollDownN, 0, ""},
-		// Large values
-		{"ScrollUpN large", ansi.ScrollUpN, 100, "\x1b[100S"},
-		{"ScrollDownN large", ansi.ScrollDownN, 999, "\x1b[999T"},
-	}
+// Tests for [ansi.ScrollUp] function.
+func Test_ScrollUp(t *testing.T) {
+	t.Run("ScrollUp", func(t *testing.T) {
+		require.Equal(t, "\x1b[1S", ansi.ScrollUp(1), "ScrollUp(1) should return the correct ANSI escape code for scrolling up 1 line.")
+	})
 
-	for _, test := range tests {
-		result := test.function(test.arg)
-		if result != test.expected {
-			t.Errorf("%s(%d) = %q; want %q", test.name, test.arg, result, test.expected)
-		}
-	}
+	t.Run("ScrollUp negative", func(t *testing.T) {
+		require.Equal(t, "", ansi.ScrollUp(-1), "ScrollUp with a negative value should return an empty string.")
+	})
+
+	t.Run("ScrollUp zero", func(t *testing.T) {
+		require.Equal(t, "", ansi.ScrollUp(0), "ScrollUp with a zero value should return an empty string.")
+	})
+
+	t.Run("ScrollUp large", func(t *testing.T) {
+		require.Equal(t, "\x1b[100S", ansi.ScrollUp(100), "ScrollUp with a large value should return the correct ANSI escape code for scrolling up 100 lines.")
+	})
 }
 
+// Tests for [ansi.ScrollDown] function.
+func Test_ScrollDown(t *testing.T) {
+	t.Run("ScrollDown", func(t *testing.T) {
+		require.Equal(t, "\x1b[1T", ansi.ScrollDown(1), "ScrollDown(1) should return the correct ANSI escape code for scrolling down 1 line.")
+	})
+
+	t.Run("ScrollDown negative", func(t *testing.T) {
+		require.Equal(t, "", ansi.ScrollDown(-1), "ScrollDown with a negative value should return an empty string.")
+	})
+
+	t.Run("ScrollDown zero", func(t *testing.T) {
+		require.Equal(t, "", ansi.ScrollDown(0), "ScrollDown with a zero value should return an empty string.")
+	})
+
+	t.Run("ScrollDown large", func(t *testing.T) {
+		require.Equal(t, "\x1b[100T", ansi.ScrollDown(100), "ScrollDown with a large value should return the correct ANSI escape code for scrolling down 999 lines.")
+	})
+}
+
+// Tests for [ansi.ScrollUp1] and [ansi.ScrollDown1] to ensure they are correctly defined as derived constants.
 func TestScrollDerivedConstants(t *testing.T) {
-	// Test composite/derived constants
-	if ansi.ScrollUp1 != ansi.ScrollUpN(1) {
-		t.Errorf("ScrollUp1 = %q; want %q", ansi.ScrollUp1, ansi.ScrollUpN(1))
-	}
-	if ansi.ScrollDown1 != ansi.ScrollDownN(1) {
-		t.Errorf("ScrollDown1 = %q; want %q", ansi.ScrollDown1, ansi.ScrollDownN(1))
-	}
+	require.Equal(t, ansi.ScrollUp(1), ansi.ScrollUp1, "ScrollUp1 should be equal to ScrollUp(1). ScrollUp")
+	require.Equal(t, ansi.ScrollDown(1), ansi.ScrollDown1, "ScrollDown1 should be equal to ScrollDown(1). ScrollDown")
 }

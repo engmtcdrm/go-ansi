@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/engmtcdrm/go-ansi"
+	"github.com/stretchr/testify/require"
 )
 
 func TestForeground8Bit(t *testing.T) {
@@ -25,9 +26,7 @@ func TestForeground8Bit(t *testing.T) {
 
 	for _, test := range tests {
 		result := ansi.Foreground8Bit(test.color)
-		if result != test.expected {
-			t.Errorf("Foreground8Bit(%d) = %q; want %q", test.color, result, test.expected)
-		}
+		require.Equal(t, test.expected, result, "Foreground8Bit(%d) = %q; want %q", test.color, result, test.expected)
 	}
 }
 
@@ -50,9 +49,7 @@ func TestBackground8Bit(t *testing.T) {
 
 	for _, test := range tests {
 		result := ansi.Background8Bit(test.color)
-		if result != test.expected {
-			t.Errorf("Background8Bit(%d) = %q; want %q", test.color, result, test.expected)
-		}
+		require.Equal(t, test.expected, result, "Background8Bit(%d) = %q; want %q", test.color, result, test.expected)
 	}
 }
 
@@ -83,9 +80,7 @@ func TestForeground24Bit(t *testing.T) {
 
 	for _, test := range tests {
 		result := ansi.Foreground24Bit(test.r, test.g, test.b)
-		if result != test.expected {
-			t.Errorf("Foreground24Bit(%d, %d, %d) = %q; want %q", test.r, test.g, test.b, result, test.expected)
-		}
+		require.Equal(t, test.expected, result, "Foreground24Bit(%d, %d, %d) = %q; want %q", test.r, test.g, test.b, result, test.expected)
 	}
 }
 
@@ -116,8 +111,6 @@ func TestBackground24Bit(t *testing.T) {
 
 	for _, test := range tests {
 		result := ansi.Background24Bit(test.r, test.g, test.b)
-		if result != test.expected {
-			t.Errorf("Background24Bit(%d, %d, %d) = %q; want %q", test.r, test.g, test.b, result, test.expected)
-		}
+		require.Equal(t, test.expected, result, "Background24Bit(%d, %d, %d) = %q; want %q", test.r, test.g, test.b, result, test.expected)
 	}
 }

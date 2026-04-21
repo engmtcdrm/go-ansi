@@ -1,12 +1,13 @@
-package ansi_test
+package ansi
 
 import (
 	"testing"
 
-	"github.com/engmtcdrm/go-ansi"
+	"github.com/stretchr/testify/require"
 )
 
-func TestStrip(t *testing.T) {
+// Tests for [Strip] function.
+func Test_Strip(t *testing.T) {
 	tests := []struct {
 		input    string
 		expected string
@@ -35,19 +36,38 @@ func TestStrip(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		result := ansi.Strip(test.input)
-		if result != test.expected {
-			t.Errorf("Strip(%q) = %q; want %q", test.input, result, test.expected)
-		}
+		result := Strip(test.input)
+		require.Equal(t, test.expected, result, "Strip(%q) = %q; want %q", test.input, result, test.expected)
 	}
 }
 
-func TestStripCodes(t *testing.T) {
-	// Test deprecated function
+// Tests for [StripCodes] function to ensure it behaves the same as Strip.
+func Test_StripCodes(t *testing.T) {
 	input := "\x1b[31mHello\x1b[0m"
 	expected := "Hello"
-	result := ansi.StripCodes(input)
-	if result != expected {
-		t.Errorf("StripCodes(%q) = %q; want %q", input, result, expected)
-	}
+	result := StripCodes(input)
+	require.Equal(t, expected, result, "StripCodes(%q) = %q; want %q", input, result, expected)
+}
+
+// Tests for [colorInRange] function.
+func Test_colorInRange(t *testing.T) {
+	t.Run("Valid range 100", func(t *testing.T) {
+		require.True(t, colorInRange(100), "colorInRange(100) should be true")
+	})
+
+	t.Run("Valid range 0", func(t *testing.T) {
+		require.True(t, colorInRange(0), "colorInRange(0) should be true")
+	})
+
+	t.Run("Valid range 255", func(t *testing.T) {
+		require.True(t, colorInRange(255), "colorInRange(255) should be true")
+	})
+
+	t.Run("Invalid range -1", func(t *testing.T) {
+		require.False(t, colorInRange(-1), "colorInRange(-1) should be false")
+	})
+
+	t.Run("Invalid range 256", func(t *testing.T) {
+		require.False(t, colorInRange(256), "colorInRange(256) should be false")
+	})
 }
