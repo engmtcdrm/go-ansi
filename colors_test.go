@@ -7,7 +7,8 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestForeground8Bit(t *testing.T) {
+// Tests for [ansi.Foreground8Bit] function.
+func Test_Foreground8Bit(t *testing.T) {
 	tests := []struct {
 		color    int
 		expected string
@@ -30,7 +31,8 @@ func TestForeground8Bit(t *testing.T) {
 	}
 }
 
-func TestBackground8Bit(t *testing.T) {
+// Tests for [ansi.Background8Bit] function.
+func Test_Background8Bit(t *testing.T) {
 	tests := []struct {
 		color    int
 		expected string
@@ -53,7 +55,8 @@ func TestBackground8Bit(t *testing.T) {
 	}
 }
 
-func TestForeground24Bit(t *testing.T) {
+// Tests for [ansi.Foreground24Bit] function.
+func Test_Foreground24Bit(t *testing.T) {
 	tests := []struct {
 		r, g, b  int
 		expected string
@@ -84,7 +87,8 @@ func TestForeground24Bit(t *testing.T) {
 	}
 }
 
-func TestBackground24Bit(t *testing.T) {
+// Tests for [ansi.Background24Bit] function.
+func Test_Background24Bit(t *testing.T) {
 	tests := []struct {
 		r, g, b  int
 		expected string
