@@ -66,7 +66,7 @@ func TestCursorPosition(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		result := ansi.MoveCursor(test.row, test.column)
+		result := ansi.CursorPosition(test.row, test.column)
 		require.Equal(t, test.expected, result, "CursorPosition(%d, %d) = %q; want %q", test.row, test.column, result, test.expected)
 	}
 }
@@ -78,7 +78,7 @@ func TestCursorDerivedConstants(t *testing.T) {
 		constant string
 		expected string
 	}{
-		{"CursorTopLeft", ansi.CursorTopLeft, ansi.MoveCursor(1, 1)},
+		{"CursorTopLeft", ansi.CursorTopLeft, ansi.CursorPosition(1, 1)},
 		{"CursorLineBegin", ansi.CursorLineBegin, ansi.CursorHorizontalAbsolute(1)},
 		{"CursorNextLine", ansi.CursorNextLine, ansi.CursorNextLineN(1)},
 		{"CursorPreviousLine", ansi.CursorPreviousLine, ansi.CursorPreviousLineN(1)},
