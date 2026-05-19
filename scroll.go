@@ -3,8 +3,8 @@ package ansi
 import "strconv"
 
 var (
-	ScrollUp1   = ScrollUpN(1)   // Scroll the screen up one row (line).
-	ScrollDown1 = ScrollDownN(1) // Scroll the screen down one row (line).
+	ScrollUp1   = ScrollUp(1)   // Scroll the screen up one row (line).
+	ScrollDown1 = ScrollDown(1) // Scroll the screen down one row (line).
 )
 
 // ScrollUp scrolls the screen up n rows (lines).
