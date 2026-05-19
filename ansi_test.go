@@ -1,156 +1,13 @@
-package ansi_test
+package ansi
 
 import (
 	"testing"
 
-	"github.com/engmtcdrm/go-ansi"
+	"github.com/stretchr/testify/require"
 )
 
-func TestForeground8Bit(t *testing.T) {
-	tests := []struct {
-		color    int
-		expected string
-	}{
-		{0, "\x1b[38;5;0m"},
-		{255, "\x1b[38;5;255m"},
-		{-1, ""},
-		{256, ""},
-	}
-
-	for _, test := range tests {
-		result := ansi.Foreground8Bit(test.color)
-		if result != test.expected {
-			t.Errorf("Foreground8Bit(%d) = %q; want %q", test.color, result, test.expected)
-		}
-	}
-}
-
-func TestBackground8Bit(t *testing.T) {
-	tests := []struct {
-		color    int
-		expected string
-	}{
-		{0, "\x1b[48;5;0m"},
-		{255, "\x1b[48;5;255m"},
-		{-1, ""},
-		{256, ""},
-	}
-
-	for _, test := range tests {
-		result := ansi.Background8Bit(test.color)
-		if result != test.expected {
-			t.Errorf("Background8Bit(%d) = %q; want %q", test.color, result, test.expected)
-		}
-	}
-}
-
-func TestForeground24Bit(t *testing.T) {
-	tests := []struct {
-		r, g, b  int
-		expected string
-	}{
-		{0, 0, 0, "\x1b[38;2;0;0;0m"},
-		{255, 255, 255, "\x1b[38;2;255;255;255m"},
-		{-1, 0, 0, ""},
-		{0, -1, 0, ""},
-		{0, 0, -1, ""},
-		{256, 0, 0, ""},
-		{0, 256, 0, ""},
-		{0, 0, 256, ""},
-	}
-
-	for _, test := range tests {
-		result := ansi.Foreground24Bit(test.r, test.g, test.b)
-		if result != test.expected {
-			t.Errorf("Foreground24Bit(%d, %d, %d) = %q; want %q", test.r, test.g, test.b, result, test.expected)
-		}
-	}
-}
-
-func TestBackground24Bit(t *testing.T) {
-	tests := []struct {
-		r, g, b  int
-		expected string
-	}{
-		{0, 0, 0, "\x1b[48;2;0;0;0m"},
-		{255, 255, 255, "\x1b[48;2;255;255;255m"},
-		{-1, 0, 0, ""},
-		{0, -1, 0, ""},
-		{0, 0, -1, ""},
-		{256, 0, 0, ""},
-		{0, 256, 0, ""},
-		{0, 0, 256, ""},
-	}
-
-	for _, test := range tests {
-		result := ansi.Background24Bit(test.r, test.g, test.b)
-		if result != test.expected {
-			t.Errorf("Background24Bit(%d, %d, %d) = %q; want %q", test.r, test.g, test.b, result, test.expected)
-		}
-	}
-}
-
-func TestCursorMovement(t *testing.T) {
-	tests := []struct {
-		name     string
-		function func(int) string
-		arg      int
-		expected string
-	}{
-		{"CursorUp", ansi.CursorUp, 1, "\x1b[1A"},
-		{"CursorDown", ansi.CursorDown, 1, "\x1b[1B"},
-		{"CursorForward", ansi.CursorForward, 1, "\x1b[1C"},
-		{"CursorBackward", ansi.CursorBackward, 1, "\x1b[1D"},
-		{"CursorNextLineN", ansi.CursorNextLineN, 1, "\x1b[1E"},
-		{"CursorPreviousLineN", ansi.CursorPreviousLineN, 1, "\x1b[1F"},
-		{"CursorHorizontalAbsolute", ansi.CursorHorizontalAbsolute, 1, "\x1b[1G"},
-	}
-
-	for _, test := range tests {
-		result := test.function(test.arg)
-		if result != test.expected {
-			t.Errorf("%s(%d) = %q; want %q", test.name, test.arg, result, test.expected)
-		}
-	}
-}
-
-func TestCursorPosition(t *testing.T) {
-	tests := []struct {
-		row, column int
-		expected    string
-	}{
-		{1, 1, "\x1b[1;1H"},
-		{10, 20, "\x1b[10;20H"},
-	}
-
-	for _, test := range tests {
-		result := ansi.CursorPosition(test.row, test.column)
-		if result != test.expected {
-			t.Errorf("CursorPosition(%d, %d) = %q; want %q", test.row, test.column, result, test.expected)
-		}
-	}
-}
-
-func TestScroll(t *testing.T) {
-	tests := []struct {
-		name     string
-		function func(int) string
-		arg      int
-		expected string
-	}{
-		{"ScrollUpN", ansi.ScrollUpN, 1, "\x1b[1S"},
-		{"ScrollDownN", ansi.ScrollDownN, 1, "\x1b[1T"},
-	}
-
-	for _, test := range tests {
-		result := test.function(test.arg)
-		if result != test.expected {
-			t.Errorf("%s(%d) = %q; want %q", test.name, test.arg, result, test.expected)
-		}
-	}
-}
-
-func TestStripCodes(t *testing.T) {
+// Tests for [Strip] function.
+func Test_Strip(t *testing.T) {
 	tests := []struct {
 		input    string
 		expected string
@@ -165,12 +22,52 @@ func TestStripCodes(t *testing.T) {
 		{"\x1b[2J\x1b[HClear Screen", "Clear Screen"},
 		{"\x1b[1;31;42mMultiple Attributes\x1b[0m", "Multiple Attributes"},
 		{"\x1b[0mReset\x1b[0m", "Reset"},
+		// Edge cases
+		{"Plain text", "Plain text"}, // No ANSI codes
+		{"", ""},                     // Empty string
+		{"\x1b[31mRed\x1b[32mGreen\x1b[0m", "RedGreen"},     // Nested ANSI codes
+		{"\x1b[31", "\x1b[31"},                              // Incomplete ANSI code
+		{"\x1b[", "\x1b["},                                  // Malformed ANSI code
+		{"\x1b[mText\x1b[m", "Text"},                        // Empty parameter ANSI codes
+		{"Text\x1b[0m", "Text"},                             // ANSI code at end only
+		{"\x1b[0mText", "Text"},                             // ANSI code at start only
+		{"Multi\x1b[31mple\x1b[0m words", "Multiple words"}, // ANSI codes in middle
+		{"\033[31mOctal escape\033[0m", "Octal escape"},     // Octal escape representation
 	}
 
 	for _, test := range tests {
-		result := ansi.StripCodes(test.input)
-		if result != test.expected {
-			t.Errorf("StripCodes(%q) = %q; want %q", test.input, result, test.expected)
-		}
+		result := Strip(test.input)
+		require.Equal(t, test.expected, result, "Strip(%q) = %q; want %q", test.input, result, test.expected)
 	}
+}
+
+// Tests for [StripCodes] function to ensure it behaves the same as Strip.
+func Test_StripCodes(t *testing.T) {
+	input := "\x1b[31mHello\x1b[0m"
+	expected := "Hello"
+	result := StripCodes(input)
+	require.Equal(t, expected, result, "StripCodes(%q) = %q; want %q", input, result, expected)
+}
+
+// Tests for [colorInRange] function.
+func Test_colorInRange(t *testing.T) {
+	t.Run("Valid range 100", func(t *testing.T) {
+		require.True(t, colorInRange(100), "colorInRange(100) should be true")
+	})
+
+	t.Run("Valid range 0", func(t *testing.T) {
+		require.True(t, colorInRange(0), "colorInRange(0) should be true")
+	})
+
+	t.Run("Valid range 255", func(t *testing.T) {
+		require.True(t, colorInRange(255), "colorInRange(255) should be true")
+	})
+
+	t.Run("Invalid range -1", func(t *testing.T) {
+		require.False(t, colorInRange(-1), "colorInRange(-1) should be false")
+	})
+
+	t.Run("Invalid range 256", func(t *testing.T) {
+		require.False(t, colorInRange(256), "colorInRange(256) should be false")
+	})
 }

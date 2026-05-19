@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Added `Strip` function to replace `StripCodes` function.
+- Added `Dim` constant to replace `Faint` constant.
+- Added `Hide` constant to replace `Hidden` constant.
+- Added `ResetHide` constant to replace `ResetHidden` constant.
+- Added `ScrollUp` function to replace `ScrollUpN` function.
+- Added `ScrollDown` function to replace `ScrollDownN` function.
+
+### Deprecated
+
+- `StripCodes` is deprecated and will be removed in the future. Use `Strip` instead.
+- `Faint` is deprecated and will be removed in the future. Use `Dim` instead.
+- `Hidden` is deprecated and will be removed in the future. Use `Hide` instead.
+- `ResetHidden` is deprecated and will be removed in the future. Use `ResetHide` instead.
+- `ScrollUpN` is deprecated and will be removed in the future. Use `ScrollUp` instead.
+- `ScrollDownN` is deprecated and will be removed in the future. Use `ScrollDown` instead.
+
 ## [v1.0.1] - 2025-01-02
 
 ### Added
