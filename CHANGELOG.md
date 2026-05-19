@@ -10,9 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added `Strip` function to replace `StripCodes` function.
-- Added `Dim` function to replace `Faint` function.
-- Added `Hide` function to replace `Hidden` function.
-- Added `ResetHide` function to replace `ResetHidden` function.
+- Added `Dim` constant to replace `Faint` constant.
+- Added `Hide` constant to replace `Hidden` constant.
+- Added `ResetHide` constant to replace `ResetHidden` constant.
 - Added `ScrollUp` function to replace `ScrollUpN` function.
 - Added `ScrollDown` function to replace `ScrollDownN` function.
 
