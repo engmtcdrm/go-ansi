@@ -28,7 +28,7 @@ func ScrollDown(n int) string {
 // ScrollUpN scrolls the screen up n rows (lines).
 // If n is less than 1, it returns an empty string.
 //
-// Obsolete: Use [ScrollUp] instead. This will be removed in v2.0.0.
+// Deprecated: Use [ScrollUp] instead. This will be removed in v2.0.0.
 func ScrollUpN(n int) string {
 	return ScrollUp(n)
 }
@@ -36,7 +36,7 @@ func ScrollUpN(n int) string {
 // ScrollDownN scrolls the screen down n rows (lines).
 // If n is less than 1, it returns an empty string.
 //
-// Obsolete: Use [ScrollDown] instead. This will be removed in v2.0.0.
+// Deprecated: Use [ScrollDown] instead. This will be removed in v2.0.0.
 func ScrollDownN(n int) string {
 	return ScrollDown(n)
 }
