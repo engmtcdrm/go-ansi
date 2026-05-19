@@ -20,5 +20,6 @@
     "remoteEnv": {
         "GOTOOLCHAIN": "auto"
     },
+    "postCreateCommand": "./.devcontainer/scripts/post-create-command.sh",
     "postAttachCommand": "./.devcontainer/scripts/post-attach-command.sh"
 }

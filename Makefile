@@ -1,7 +1,7 @@
 .PHONY: run test testv
 
-run:
-	go run ./example/main.go
+# run:
+# 	go run ./example/main.go
 
 test:
 	go test -timeout 30s ./...
