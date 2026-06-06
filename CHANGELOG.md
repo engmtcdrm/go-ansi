@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Added `Escape` character constant.
+
+### Changed
+
+- `CSI` constant is now exported.
+
 ## [v1.0.2] - 2026-05-18
 
 ### Added
