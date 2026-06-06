@@ -13,7 +13,7 @@ func ScrollUp(n int) string {
 	if n < 1 {
 		return ""
 	}
-	return csi + strconv.Itoa(n) + "S"
+	return CSI + strconv.Itoa(n) + "S"
 }
 
 // ScrollDown scrolls the screen down n rows (lines).
@@ -22,7 +22,7 @@ func ScrollDown(n int) string {
 	if n < 1 {
 		return ""
 	}
-	return csi + strconv.Itoa(n) + "T"
+	return CSI + strconv.Itoa(n) + "T"
 }
 
 // ScrollUpN scrolls the screen up n rows (lines).

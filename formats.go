@@ -3,34 +3,34 @@ package ansi
 // Formatting
 
 const (
-	Reset           = csi + "0m"  // Reset all formatting.
-	Bold            = csi + "1m"  // Bold or increased intensity.
-	Dim             = csi + "2m"  // Dim, decreased intensity, or dim.
-	Italic          = csi + "3m"  // Italicized text.
-	Underline       = csi + "4m"  // Underlined text.
-	SlowBlink       = csi + "5m"  // Slow blinking text.
-	RapidBlink      = csi + "6m"  // Rapid blinking text.
-	Reverse         = csi + "7m"  // Reversed colors. Not widely supported.
-	Hide            = csi + "8m"  // Hide text. Not widely supported.
-	Strike          = csi + "9m"  // Strikethrough text.
-	DoubleUnderline = csi + "21m" // Double underlined text.
+	Reset           = CSI + "0m"  // Reset all formatting.
+	Bold            = CSI + "1m"  // Bold or increased intensity.
+	Dim             = CSI + "2m"  // Dim, decreased intensity, or dim.
+	Italic          = CSI + "3m"  // Italicized text.
+	Underline       = CSI + "4m"  // Underlined text.
+	SlowBlink       = CSI + "5m"  // Slow blinking text.
+	RapidBlink      = CSI + "6m"  // Rapid blinking text.
+	Reverse         = CSI + "7m"  // Reversed colors. Not widely supported.
+	Hide            = CSI + "8m"  // Hide text. Not widely supported.
+	Strike          = CSI + "9m"  // Strikethrough text.
+	DoubleUnderline = CSI + "21m" // Double underlined text.
 
 	// Reset Formatting
 
-	ResetIntensity = csi + "22m" // Reset bold or faint.
-	ResetItalic    = csi + "23m" // Reset italic.
-	ResetUnderline = csi + "24m" // Reset underline.
-	ResetBlink     = csi + "25m" // Reset blink.
-	ResetReverse   = csi + "27m" // Reset reverse.
-	ResetHide      = csi + "28m" // Reset hide.
-	ResetStrike    = csi + "29m" // Reset strikethrough.
+	ResetIntensity = CSI + "22m" // Reset bold or faint.
+	ResetItalic    = CSI + "23m" // Reset italic.
+	ResetUnderline = CSI + "24m" // Reset underline.
+	ResetBlink     = CSI + "25m" // Reset blink.
+	ResetReverse   = CSI + "27m" // Reset reverse.
+	ResetHide      = CSI + "28m" // Reset hide.
+	ResetStrike    = CSI + "29m" // Reset strikethrough.
 
-	Framed         = csi + "51m" // Framed text.
-	Encircled      = csi + "52m" // Encircled text.
-	Overlined      = csi + "53m" // Overlined text.
-	ResetFramed    = csi + "54m" // Reset framed and encircled.
-	ResetOverlined = csi + "55m" // Reset overlined.
-	IdeogramRight  = csi + "73m" // Ideogram right underline.
+	Framed         = CSI + "51m" // Framed text.
+	Encircled      = CSI + "52m" // Encircled text.
+	Overlined      = CSI + "53m" // Overlined text.
+	ResetFramed    = CSI + "54m" // Reset framed and encircled.
+	ResetOverlined = CSI + "55m" // Reset overlined.
+	IdeogramRight  = CSI + "73m" // Ideogram right underline.
 
 	// Hidden text. Not widely supported.
 	//

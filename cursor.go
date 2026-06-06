@@ -5,10 +5,10 @@ import (
 )
 
 const (
-	SaveCursorPos    = csi + "s"    // Save the cursor position.
-	RestoreCursorPos = csi + "u"    // Restore the cursor position.
-	HideCursor       = csi + "?25l" // Hide the cursor.
-	ShowCursor       = csi + "?25h" // Show the cursor.
+	SaveCursorPos    = CSI + "s"    // Save the cursor position.
+	RestoreCursorPos = CSI + "u"    // Restore the cursor position.
+	HideCursor       = CSI + "?25l" // Hide the cursor.
+	ShowCursor       = CSI + "?25h" // Show the cursor.
 )
 
 var (
@@ -24,7 +24,7 @@ func CursorUp(n int) string {
 	if n < 1 {
 		return ""
 	}
-	return csi + strconv.Itoa(n) + "A"
+	return CSI + strconv.Itoa(n) + "A"
 }
 
 // CursorDown moves the cursor down n rows (lines).
@@ -33,7 +33,7 @@ func CursorDown(n int) string {
 	if n < 1 {
 		return ""
 	}
-	return csi + strconv.Itoa(n) + "B"
+	return CSI + strconv.Itoa(n) + "B"
 }
 
 // CursorForward moves the cursor forward n columns.
@@ -42,7 +42,7 @@ func CursorForward(n int) string {
 	if n < 1 {
 		return ""
 	}
-	return csi + strconv.Itoa(n) + "C"
+	return CSI + strconv.Itoa(n) + "C"
 }
 
 // CursorBackward moves the cursor backward n columns.
@@ -51,7 +51,7 @@ func CursorBackward(n int) string {
 	if n < 1 {
 		return ""
 	}
-	return csi + strconv.Itoa(n) + "D"
+	return CSI + strconv.Itoa(n) + "D"
 }
 
 // CursorNextLine moves the cursor down n rows (lines).
@@ -60,7 +60,7 @@ func CursorNextLineN(n int) string {
 	if n < 1 {
 		return ""
 	}
-	return csi + strconv.Itoa(n) + "E"
+	return CSI + strconv.Itoa(n) + "E"
 }
 
 // CursorPreviousLine moves the cursor up n rows (lines).
@@ -69,7 +69,7 @@ func CursorPreviousLineN(n int) string {
 	if n < 1 {
 		return ""
 	}
-	return csi + strconv.Itoa(n) + "F"
+	return CSI + strconv.Itoa(n) + "F"
 }
 
 // CursorHorizontalAbsolute moves the cursor to the nth column.
@@ -78,7 +78,7 @@ func CursorHorizontalAbsolute(n int) string {
 	if n < 1 {
 		return ""
 	}
-	return csi + strconv.Itoa(n) + "G"
+	return CSI + strconv.Itoa(n) + "G"
 }
 
 // CursorPosition moves the cursor to the specified position of row (line) and column.
@@ -87,5 +87,5 @@ func CursorPosition(row, column int) string {
 	if row < 1 || column < 1 {
 		return ""
 	}
-	return csi + strconv.Itoa(row) + ";" + strconv.Itoa(column) + "H"
+	return CSI + strconv.Itoa(row) + ";" + strconv.Itoa(column) + "H"
 }
