@@ -14,13 +14,13 @@ func TestCursorMovement(t *testing.T) {
 		arg      int
 		expected string
 	}{
-		{"CursorUp", ansi.CursorUp, 1, "\x1b[1A"},
-		{"CursorDown", ansi.CursorDown, 1, "\x1b[1B"},
-		{"CursorForward", ansi.CursorForward, 1, "\x1b[1C"},
-		{"CursorBackward", ansi.CursorBackward, 1, "\x1b[1D"},
-		{"CursorNextLineN", ansi.CursorNextLineN, 1, "\x1b[1E"},
-		{"CursorPreviousLineN", ansi.CursorPreviousLineN, 1, "\x1b[1F"},
-		{"CursorHorizontalAbsolute", ansi.CursorHorizontalAbsolute, 1, "\x1b[1G"},
+		{"CursorUp", ansi.CursorUp, 1, "\x1b[A"},
+		{"CursorDown", ansi.CursorDown, 1, "\x1b[B"},
+		{"CursorForward", ansi.CursorForward, 1, "\x1b[C"},
+		{"CursorBackward", ansi.CursorBackward, 1, "\x1b[D"},
+		{"CursorNextLineN", ansi.CursorNextLineN, 1, "\x1b[E"},
+		{"CursorPreviousLineN", ansi.CursorPreviousLineN, 1, "\x1b[F"},
+		{"CursorHorizontalAbsolute", ansi.CursorHorizontalAbsolute, 1, "\x1b[G"},
 		// Edge cases - negative values
 		{"CursorUp negative", ansi.CursorUp, -1, ""},
 		{"CursorDown negative", ansi.CursorDown, -1, ""},
@@ -40,6 +40,11 @@ func TestCursorMovement(t *testing.T) {
 		// Large values
 		{"CursorUp large", ansi.CursorUp, 100, "\x1b[100A"},
 		{"CursorDown large", ansi.CursorDown, 999, "\x1b[999B"},
+		{"CursorForward large", ansi.CursorForward, 100, "\x1b[100C"},
+		{"CursorBackward large", ansi.CursorBackward, 100, "\x1b[100D"},
+		{"CursorNextLineN large", ansi.CursorNextLineN, 100, "\x1b[100E"},
+		{"CursorPreviousLineN large", ansi.CursorPreviousLineN, 100, "\x1b[100F"},
+		{"CursorHorizontalAbsolute large", ansi.CursorHorizontalAbsolute, 100, "\x1b[100G"},
 	}
 
 	for _, test := range tests {
@@ -53,7 +58,7 @@ func TestCursorPosition(t *testing.T) {
 		row, column int
 		expected    string
 	}{
-		{1, 1, "\x1b[1;1H"},
+		{1, 1, "\x1b[H"},
 		{10, 20, "\x1b[10;20H"},
 		// Edge cases
 		{0, 0, ""},                  // Both zero
