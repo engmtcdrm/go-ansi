@@ -5,8 +5,8 @@ import (
 )
 
 const (
-	Escape = "\x1b"       // ANSI escape character
-	CSI    = Escape + "[" // ANSI control sequence introducer
+	Escape = "\x1b"       // ANSI escape character.
+	CSI    = Escape + "[" // ANSI control sequence introducer.
 )
 
 var ansiRegex = regexp.MustCompile(`(?:\x1b|\033)\[[;?0-9]*[a-zA-Z]`)

@@ -5,8 +5,8 @@ import (
 )
 
 const (
-	SaveCursorPos    = CSI + "s"    // Save the cursor position.
-	RestoreCursorPos = CSI + "u"    // Restore the cursor position.
+	SaveCursorPos    = CSI + "7"    // Save the cursor position.
+	RestoreCursorPos = CSI + "8"    // Restore the cursor position.
 	HideCursor       = CSI + "?25l" // Hide the cursor.
 	ShowCursor       = CSI + "?25h" // Show the cursor.
 )
@@ -24,6 +24,11 @@ func CursorUp(n int) string {
 	if n < 1 {
 		return ""
 	}
+
+	if n == 1 {
+		return CSI + "A"
+	}
+
 	return CSI + strconv.Itoa(n) + "A"
 }
 
@@ -33,6 +38,11 @@ func CursorDown(n int) string {
 	if n < 1 {
 		return ""
 	}
+
+	if n == 1 {
+		return CSI + "B"
+	}
+
 	return CSI + strconv.Itoa(n) + "B"
 }
 
@@ -42,6 +52,11 @@ func CursorForward(n int) string {
 	if n < 1 {
 		return ""
 	}
+
+	if n == 1 {
+		return CSI + "C"
+	}
+
 	return CSI + strconv.Itoa(n) + "C"
 }
 
@@ -51,6 +66,11 @@ func CursorBackward(n int) string {
 	if n < 1 {
 		return ""
 	}
+
+	if n == 1 {
+		return CSI + "D"
+	}
+
 	return CSI + strconv.Itoa(n) + "D"
 }
 
@@ -60,6 +80,11 @@ func CursorNextLineN(n int) string {
 	if n < 1 {
 		return ""
 	}
+
+	if n == 1 {
+		return CSI + "E"
+	}
+
 	return CSI + strconv.Itoa(n) + "E"
 }
 
@@ -69,6 +94,11 @@ func CursorPreviousLineN(n int) string {
 	if n < 1 {
 		return ""
 	}
+
+	if n == 1 {
+		return CSI + "F"
+	}
+
 	return CSI + strconv.Itoa(n) + "F"
 }
 
@@ -78,6 +108,11 @@ func CursorHorizontalAbsolute(n int) string {
 	if n < 1 {
 		return ""
 	}
+
+	if n == 1 {
+		return CSI + "G"
+	}
+
 	return CSI + strconv.Itoa(n) + "G"
 }
 
@@ -87,5 +122,10 @@ func CursorPosition(row, column int) string {
 	if row < 1 || column < 1 {
 		return ""
 	}
+
+	if row == 1 && column == 1 {
+		return CSI + "H"
+	}
+
 	return CSI + strconv.Itoa(row) + ";" + strconv.Itoa(column) + "H"
 }
