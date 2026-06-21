@@ -32,17 +32,26 @@ import "github.com/engmtcdrm/go-ansi"
 
 ## Constants
 
+<a name="Escape"></a>
+
+```go
+const (
+    Escape = "\x1b"       // ANSI escape character.
+    CSI    = Escape + "[" // ANSI control sequence introducer.
+)
+```
+
 <a name="ClearFromCursorToEndScreen"></a>
 
 ```go
 const (
-    ClearFromCursorToEndScreen   = csi + "0J"             // Clears from the cursor to the end of the screen.
-    ClearFromCursorToBeginScreen = csi + "1J"             // Clears from the cursor to the beginning of the screen.
-    ClearScreen                  = csi + "2J"             // Clear the entire screen.
-    ClearToEnd                   = csi + "K"              // Clear from the cursor to the end of the row (line).
-    ClearToBegin                 = csi + "1K"             // Clear from the cursor to the beginning of the row (line).
-    ClearLine                    = csi + "2K"             // Clear the entire row (line).
-    ClearLineReset               = ClearLine + csi + "1G" // Clear the entire row (line) and move the cursor to the start of the row (line).
+    ClearFromCursorToEndScreen   = CSI + "0J"             // Clears from the cursor to the end of the screen.
+    ClearFromCursorToBeginScreen = CSI + "1J"             // Clears from the cursor to the beginning of the screen.
+    ClearScreen                  = CSI + "2J"             // Clear the entire screen.
+    ClearToEnd                   = CSI + "K"              // Clear from the cursor to the end of the row (line).
+    ClearToBegin                 = CSI + "1K"             // Clear from the cursor to the beginning of the row (line).
+    ClearLine                    = CSI + "2K"             // Clear the entire row (line).
+    ClearLineReset               = ClearLine + CSI + "1G" // Clear the entire row (line) and move the cursor to the start of the row (line).
 )
 ```
 
@@ -73,15 +82,15 @@ const (
 
 ```go
 const (
-    Black   = csi + "30m" // Black foreground color.
-    Red     = csi + "31m" // Red foreground color.
-    Green   = csi + "32m" // Green foreground color.
-    Yellow  = csi + "33m" // Yellow foreground color.
-    Blue    = csi + "34m" // Blue foreground color.
-    Magenta = csi + "35m" // Magenta foreground color.
-    Cyan    = csi + "36m" // Cyan foreground color.
-    White   = csi + "37m" // White foreground color.
-    Default = csi + "39m" // Default foreground color.
+    Black   = CSI + "30m" // Black foreground color.
+    Red     = CSI + "31m" // Red foreground color.
+    Green   = CSI + "32m" // Green foreground color.
+    Yellow  = CSI + "33m" // Yellow foreground color.
+    Blue    = CSI + "34m" // Blue foreground color.
+    Magenta = CSI + "35m" // Magenta foreground color.
+    Cyan    = CSI + "36m" // Cyan foreground color.
+    White   = CSI + "37m" // White foreground color.
+    Default = CSI + "39m" // Default foreground color.
 )
 ```
 
@@ -89,15 +98,15 @@ const (
 
 ```go
 const (
-    BlackBg   = csi + "40m" // Black background color.
-    RedBg     = csi + "41m" // Red background color.
-    GreenBg   = csi + "42m" // Green background color.
-    YellowBg  = csi + "43m" // Yellow background color.
-    BlueBg    = csi + "44m" // Blue background color.
-    MagentaBg = csi + "45m" // Magenta background color.
-    CyanBg    = csi + "46m" // Cyan background color.
-    WhiteBg   = csi + "47m" // White background color.
-    DefaultBg = csi + "49m" // Default background color.
+    BlackBg   = CSI + "40m" // Black background color.
+    RedBg     = CSI + "41m" // Red background color.
+    GreenBg   = CSI + "42m" // Green background color.
+    YellowBg  = CSI + "43m" // Yellow background color.
+    BlueBg    = CSI + "44m" // Blue background color.
+    MagentaBg = CSI + "45m" // Magenta background color.
+    CyanBg    = CSI + "46m" // Cyan background color.
+    WhiteBg   = CSI + "47m" // White background color.
+    DefaultBg = CSI + "49m" // Default background color.
 )
 ```
 
@@ -105,14 +114,14 @@ const (
 
 ```go
 const (
-    IntenseBlack   = csi + "90m" // Intense Black foreground color.
-    IntenseRed     = csi + "91m" // Intense Red foreground color.
-    IntenseGreen   = csi + "92m" // Intense Green foreground color.
-    IntenseYellow  = csi + "93m" // Intense Yellow foreground color.
-    IntenseBlue    = csi + "94m" // Intense Blue foreground color.
-    IntenseMagenta = csi + "95m" // Intense Magenta foreground color.
-    IntenseCyan    = csi + "96m" // Intense Cyan foreground color.
-    IntenseWhite   = csi + "97m" // Intense White foreground color.
+    IntenseBlack   = CSI + "90m" // Intense Black foreground color.
+    IntenseRed     = CSI + "91m" // Intense Red foreground color.
+    IntenseGreen   = CSI + "92m" // Intense Green foreground color.
+    IntenseYellow  = CSI + "93m" // Intense Yellow foreground color.
+    IntenseBlue    = CSI + "94m" // Intense Blue foreground color.
+    IntenseMagenta = CSI + "95m" // Intense Magenta foreground color.
+    IntenseCyan    = CSI + "96m" // Intense Cyan foreground color.
+    IntenseWhite   = CSI + "97m" // Intense White foreground color.
 
 )
 ```
@@ -121,14 +130,14 @@ const (
 
 ```go
 const (
-    IntenseBlackBg   = csi + "100m" // Intense Black background color.
-    IntenseRedBg     = csi + "101m" // Intense Red background color.
-    IntenseGreenBg   = csi + "102m" // Intense Green background color.
-    IntenseYellowBg  = csi + "103m" // Intense Yellow background color.
-    IntenseBlueBg    = csi + "104m" // Intense Blue background color.
-    IntenseMagentaBg = csi + "105m" // Intense Magenta background color.
-    IntenseCyanBg    = csi + "106m" // Intense Cyan background color.
-    IntenseWhiteBg   = csi + "107m" // Intense White background color.
+    IntenseBlackBg   = CSI + "100m" // Intense Black background color.
+    IntenseRedBg     = CSI + "101m" // Intense Red background color.
+    IntenseGreenBg   = CSI + "102m" // Intense Green background color.
+    IntenseYellowBg  = CSI + "103m" // Intense Yellow background color.
+    IntenseBlueBg    = CSI + "104m" // Intense Blue background color.
+    IntenseMagentaBg = CSI + "105m" // Intense Magenta background color.
+    IntenseCyanBg    = CSI + "106m" // Intense Cyan background color.
+    IntenseWhiteBg   = CSI + "107m" // Intense White background color.
 )
 ```
 
@@ -136,10 +145,10 @@ const (
 
 ```go
 const (
-    SaveCursorPos    = csi + "s"    // Save the cursor position.
-    RestoreCursorPos = csi + "u"    // Restore the cursor position.
-    HideCursor       = csi + "?25l" // Hide the cursor.
-    ShowCursor       = csi + "?25h" // Show the cursor.
+    SaveCursorPos    = Escape + "7" // Save the cursor position.
+    RestoreCursorPos = Escape + "8" // Restore the cursor position.
+    HideCursor       = CSI + "?25l" // Hide the cursor.
+    ShowCursor       = CSI + "?25h" // Show the cursor.
 )
 ```
 
@@ -147,32 +156,32 @@ const (
 
 ```go
 const (
-    Reset           = csi + "0m"  // Reset all formatting.
-    Bold            = csi + "1m"  // Bold or increased intensity.
-    Dim             = csi + "2m"  // Dim, decreased intensity, or dim.
-    Italic          = csi + "3m"  // Italicized text.
-    Underline       = csi + "4m"  // Underlined text.
-    SlowBlink       = csi + "5m"  // Slow blinking text.
-    RapidBlink      = csi + "6m"  // Rapid blinking text.
-    Reverse         = csi + "7m"  // Reversed colors. Not widely supported.
-    Hide            = csi + "8m"  // Hide text. Not widely supported.
-    Strike          = csi + "9m"  // Strikethrough text.
-    DoubleUnderline = csi + "21m" // Double underlined text.
+    Reset           = CSI + "0m"  // Reset all formatting.
+    Bold            = CSI + "1m"  // Bold or increased intensity.
+    Dim             = CSI + "2m"  // Dim, decreased intensity, or dim.
+    Italic          = CSI + "3m"  // Italicized text.
+    Underline       = CSI + "4m"  // Underlined text.
+    SlowBlink       = CSI + "5m"  // Slow blinking text.
+    RapidBlink      = CSI + "6m"  // Rapid blinking text.
+    Reverse         = CSI + "7m"  // Reversed colors. Not widely supported.
+    Hide            = CSI + "8m"  // Hide text. Not widely supported.
+    Strike          = CSI + "9m"  // Strikethrough text.
+    DoubleUnderline = CSI + "21m" // Double underlined text.
 
-    ResetIntensity = csi + "22m" // Reset bold or faint.
-    ResetItalic    = csi + "23m" // Reset italic.
-    ResetUnderline = csi + "24m" // Reset underline.
-    ResetBlink     = csi + "25m" // Reset blink.
-    ResetReverse   = csi + "27m" // Reset reverse.
-    ResetHide      = csi + "28m" // Reset hide.
-    ResetStrike    = csi + "29m" // Reset strikethrough.
+    ResetIntensity = CSI + "22m" // Reset bold or faint.
+    ResetItalic    = CSI + "23m" // Reset italic.
+    ResetUnderline = CSI + "24m" // Reset underline.
+    ResetBlink     = CSI + "25m" // Reset blink.
+    ResetReverse   = CSI + "27m" // Reset reverse.
+    ResetHide      = CSI + "28m" // Reset hide.
+    ResetStrike    = CSI + "29m" // Reset strikethrough.
 
-    Framed         = csi + "51m" // Framed text.
-    Encircled      = csi + "52m" // Encircled text.
-    Overlined      = csi + "53m" // Overlined text.
-    ResetFramed    = csi + "54m" // Reset framed and encircled.
-    ResetOverlined = csi + "55m" // Reset overlined.
-    IdeogramRight  = csi + "73m" // Ideogram right underline.
+    Framed         = CSI + "51m" // Framed text.
+    Encircled      = CSI + "52m" // Encircled text.
+    Overlined      = CSI + "53m" // Overlined text.
+    ResetFramed    = CSI + "54m" // Reset framed and encircled.
+    ResetOverlined = CSI + "55m" // Reset overlined.
+    IdeogramRight  = CSI + "73m" // Ideogram right underline.
 
     // Hidden text. Not widely supported.
     //
@@ -232,7 +241,7 @@ func Background8Bit(color int) string
 8\-bit background color color must be between 0 and 255 otherwise it will return an empty string.
 
 <a name="CursorBackward"></a>
-## func [CursorBackward](<https://github.com/engmtcdrm/go-ansi/blob/main/cursor.go#L50>)
+## func [CursorBackward](<https://github.com/engmtcdrm/go-ansi/blob/main/cursor.go#L65>)
 
 ```go
 func CursorBackward(n int) string
@@ -241,7 +250,7 @@ func CursorBackward(n int) string
 CursorBackward moves the cursor backward n columns. If n is less than 1, it returns an empty string.
 
 <a name="CursorDown"></a>
-## func [CursorDown](<https://github.com/engmtcdrm/go-ansi/blob/main/cursor.go#L32>)
+## func [CursorDown](<https://github.com/engmtcdrm/go-ansi/blob/main/cursor.go#L37>)
 
 ```go
 func CursorDown(n int) string
@@ -250,7 +259,7 @@ func CursorDown(n int) string
 CursorDown moves the cursor down n rows \(lines\). If n is less than 1, it returns an empty string.
 
 <a name="CursorForward"></a>
-## func [CursorForward](<https://github.com/engmtcdrm/go-ansi/blob/main/cursor.go#L41>)
+## func [CursorForward](<https://github.com/engmtcdrm/go-ansi/blob/main/cursor.go#L51>)
 
 ```go
 func CursorForward(n int) string
@@ -259,7 +268,7 @@ func CursorForward(n int) string
 CursorForward moves the cursor forward n columns. If n is less than 1, it returns an empty string.
 
 <a name="CursorHorizontalAbsolute"></a>
-## func [CursorHorizontalAbsolute](<https://github.com/engmtcdrm/go-ansi/blob/main/cursor.go#L77>)
+## func [CursorHorizontalAbsolute](<https://github.com/engmtcdrm/go-ansi/blob/main/cursor.go#L107>)
 
 ```go
 func CursorHorizontalAbsolute(n int) string
@@ -268,7 +277,7 @@ func CursorHorizontalAbsolute(n int) string
 CursorHorizontalAbsolute moves the cursor to the nth column. If n is less than 1, it returns an empty string.
 
 <a name="CursorNextLineN"></a>
-## func [CursorNextLineN](<https://github.com/engmtcdrm/go-ansi/blob/main/cursor.go#L59>)
+## func [CursorNextLineN](<https://github.com/engmtcdrm/go-ansi/blob/main/cursor.go#L79>)
 
 ```go
 func CursorNextLineN(n int) string
@@ -277,7 +286,7 @@ func CursorNextLineN(n int) string
 CursorNextLine moves the cursor down n rows \(lines\). If n is less than 1, it returns an empty string.
 
 <a name="CursorPosition"></a>
-## func [CursorPosition](<https://github.com/engmtcdrm/go-ansi/blob/main/cursor.go#L86>)
+## func [CursorPosition](<https://github.com/engmtcdrm/go-ansi/blob/main/cursor.go#L121>)
 
 ```go
 func CursorPosition(row, column int) string
@@ -286,7 +295,7 @@ func CursorPosition(row, column int) string
 CursorPosition moves the cursor to the specified position of row \(line\) and column. If either row or column are less than 1, it returns an empty string.
 
 <a name="CursorPreviousLineN"></a>
-## func [CursorPreviousLineN](<https://github.com/engmtcdrm/go-ansi/blob/main/cursor.go#L68>)
+## func [CursorPreviousLineN](<https://github.com/engmtcdrm/go-ansi/blob/main/cursor.go#L93>)
 
 ```go
 func CursorPreviousLineN(n int) string
@@ -362,7 +371,7 @@ ScrollUpN scrolls the screen up n rows \(lines\). If n is less than 1, it return
 Deprecated: Use [ScrollUp](<#ScrollUp>) instead. This will be removed in v2.0.0.
 
 <a name="Strip"></a>
-## func [Strip](<https://github.com/engmtcdrm/go-ansi/blob/main/ansi.go#L11>)
+## func [Strip](<https://github.com/engmtcdrm/go-ansi/blob/main/ansi.go#L15>)
 
 ```go
 func Strip(input string) string
@@ -371,7 +380,7 @@ func Strip(input string) string
 Strip removes all ANSI escape codes from the input string.
 
 <a name="StripCodes"></a>
-## func [StripCodes](<https://github.com/engmtcdrm/go-ansi/blob/main/ansi.go#L18>)
+## func [StripCodes](<https://github.com/engmtcdrm/go-ansi/blob/main/ansi.go#L22>)
 
 ```go
 func StripCodes(input string) string
