@@ -14,6 +14,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - `CSI` constant is now exported.
+- `SaveCursorPos` now uses DEC sequence instead of SCO sequence.
+- `RestoreCursorPos` now DEC sequence instead of SCO sequence
+- `Cursor*` functions now exit early if `n == 1` to reduce writing `1` in the sequence since it is not needed to function the same, e.g. `\x1b[A` is functionaly the same as `\x1b[1A`.
 
 ## [v1.0.2] - 2026-05-18
 
