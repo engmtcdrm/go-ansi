@@ -5,8 +5,8 @@ import (
 )
 
 const (
-	SaveCursorPos    = CSI + "7"    // Save the cursor position.
-	RestoreCursorPos = CSI + "8"    // Restore the cursor position.
+	SaveCursorPos    = Escape + "7" // Save the cursor position.
+	RestoreCursorPos = Escape + "8" // Restore the cursor position.
 	HideCursor       = CSI + "?25l" // Hide the cursor.
 	ShowCursor       = CSI + "?25h" // Show the cursor.
 )
