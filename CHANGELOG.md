@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.0.4] - 2026-06-21
+
+### Fix
+
+- Fixed `SaveCursorPos` and `RestoreCursorPos` using `CSI` instead of `Escape`.
+
 ## [v1.0.3] - 2026-06-21
 
 ### Added
