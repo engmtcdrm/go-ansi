@@ -9,11 +9,16 @@ const (
 	CSI    = Escape + "[" // ANSI control sequence introducer.
 )
 
-var ansiRegex = regexp.MustCompile(`(?:\x1b|\033)\[[;?0-9]*[a-zA-Z]`)
+var ansiRegex = regexp.MustCompile(`\x1b\[[;?0-9]*[a-zA-Z]`)
 
-// Strip removes all ANSI escape codes from the input string.
-func Strip(input string) string {
-	return ansiRegex.ReplaceAllString(input, "")
+// Strip removes all ANSI escape codes from the input.
+func Strip[T ~string | ~[]byte | ~[]rune](input T) T {
+	switch v := any(input).(type) {
+	case string:
+		return T(ansiRegex.ReplaceAllString(v, ""))
+	default:
+		return T(ansiRegex.ReplaceAllString(string(input), ""))
+	}
 }
 
 // StripCodes removes all ANSI escape codes from the input string.

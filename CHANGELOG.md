@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `Strip` function now supports `[]byte` and `[]rune` input types along with `string` input type.
+
 ## [v1.0.4] - 2026-06-21
 
 ### Fixed
