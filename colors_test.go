@@ -9,6 +9,8 @@ import (
 
 // Tests for [ansi.Foreground8Bit] function.
 func Test_Foreground8Bit(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		color    int
 		expected string
@@ -33,6 +35,8 @@ func Test_Foreground8Bit(t *testing.T) {
 
 // Tests for [ansi.Background8Bit] function.
 func Test_Background8Bit(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		color    int
 		expected string
@@ -57,6 +61,8 @@ func Test_Background8Bit(t *testing.T) {
 
 // Tests for [ansi.Foreground24Bit] function.
 func Test_Foreground24Bit(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		r, g, b  int
 		expected string
