@@ -4,14 +4,8 @@ import (
 	"testing"
 )
 
-type ansiCase struct {
-	name        string
-	input       string
-	expectedLen int
-}
-
-// Tests for [escapeLength] function.
-func Test_escapeLength(t *testing.T) {
+// Tests for [escapeLengthRune] function.
+func Test_escapeLengthRune(t *testing.T) {
 	t.Parallel()
 
 	tests := []ansiCase{
@@ -41,16 +35,16 @@ func Test_escapeLength(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			returnedLen := escapeLength(tt.input)
+			returnedLen := escapeLengthRune([]rune(tt.input))
 			if returnedLen != tt.expectedLen {
-				t.Fatalf("EscapeLength returned %d, expected %d", returnedLen, tt.expectedLen)
+				t.Fatalf("escapeLengthRune returned %d, expected %d", returnedLen, tt.expectedLen)
 			}
 		})
 	}
 }
 
-// Tests for [csiBodyLength] function.
-func Test_csiBodyLength(t *testing.T) {
+// Tests for [csiBodyLengthRune] function.
+func Test_csiBodyLengthRune(t *testing.T) {
 	t.Parallel()
 
 	tests := []ansiCase{
@@ -68,16 +62,16 @@ func Test_csiBodyLength(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			returnedLen := csiBodyLength(tt.input[2:])
+			returnedLen := csiBodyLengthRune([]rune(tt.input[2:]))
 			if returnedLen != tt.expectedLen {
-				t.Fatalf("csiBodyLength returned %d, expected %d", returnedLen, tt.expectedLen)
+				t.Fatalf("csiBodyLengthRune returned %d, expected %d", returnedLen, tt.expectedLen)
 			}
 		})
 	}
 }
 
-// Tests for [oscLength] function.
-func Test_oscLength(t *testing.T) {
+// Tests for [oscLengthRune] function.
+func Test_oscLengthRune(t *testing.T) {
 	t.Parallel()
 
 	tests := []ansiCase{
@@ -93,16 +87,16 @@ func Test_oscLength(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			returnedLen := oscLength(tt.input[2:])
+			returnedLen := oscLengthRune([]rune(tt.input[2:]))
 			if returnedLen != tt.expectedLen {
-				t.Fatalf("oscLength returned %d, expected %d", returnedLen, tt.expectedLen)
+				t.Fatalf("oscLengthRune returned %d, expected %d", returnedLen, tt.expectedLen)
 			}
 		})
 	}
 }
 
-// Tests for [stSequenceLength] function.
-func Test_stSequenceLength(t *testing.T) {
+// Tests for [stSequenceLengthRune] function.
+func Test_stSequenceLengthRune(t *testing.T) {
 	t.Parallel()
 
 	tests := []ansiCase{
@@ -122,9 +116,9 @@ func Test_stSequenceLength(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			returnedLen := stSequenceLength(tt.input[2:])
+			returnedLen := stSequenceLengthRune([]rune(tt.input[2:]))
 			if returnedLen != tt.expectedLen {
-				t.Fatalf("stSequenceLength returned %d, expected %d", returnedLen, tt.expectedLen)
+				t.Fatalf("stSequenceLengthRune returned %d, expected %d", returnedLen, tt.expectedLen)
 			}
 		})
 	}
