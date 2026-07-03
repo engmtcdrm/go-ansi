@@ -1,126 +1,135 @@
-package ansi_test
+package ansi
 
 import (
 	"testing"
 
-	"github.com/engmtcdrm/go-ansi"
 	"github.com/stretchr/testify/require"
 )
 
-// Tests for [ansi.Foreground8Bit] function.
+type color8BitTestCase struct {
+	name     string
+	color    int
+	expected string
+}
+
+type color24BitTestCase struct {
+	name     string
+	r, g, b  int
+	expected string
+}
+
+// Tests for [Foreground8Bit] function.
 func Test_Foreground8Bit(t *testing.T) {
 	t.Parallel()
 
-	tests := []struct {
-		color    int
-		expected string
-	}{
-		{0, "\x1b[38;5;0m"},
-		{255, "\x1b[38;5;255m"},
-		{-1, ""},
-		{256, ""},
-		// Additional edge cases
-		{128, "\x1b[38;5;128m"}, // Mid-range value
-		{1, "\x1b[38;5;1m"},     // Minimum valid positive
-		{254, "\x1b[38;5;254m"}, // Maximum - 1
-		{-100, ""},              // Large negative
-		{1000, ""},              // Large positive
+	tests := []color8BitTestCase{
+		{name: "-1", color: -1, expected: ""},
+		{name: "0", color: 0, expected: "\x1b[38;5;0m"},
+		{name: "1", color: 1, expected: "\x1b[38;5;1m"},
+		{name: "128", color: 128, expected: "\x1b[38;5;128m"},
+		{name: "254", color: 254, expected: "\x1b[38;5;254m"},
+		{name: "255", color: 255, expected: "\x1b[38;5;255m"},
+		{name: "256", color: 256, expected: ""},
 	}
 
-	for _, test := range tests {
-		result := ansi.Foreground8Bit(test.color)
-		require.Equal(t, test.expected, result, "Foreground8Bit(%d) = %q; want %q", test.color, result, test.expected)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			result := Foreground8Bit(tt.color)
+			require.Equal(t, tt.expected, result, "Foreground8Bit(%d) = %q; want %q", tt.color, result, tt.expected)
+		})
 	}
 }
 
-// Tests for [ansi.Background8Bit] function.
+// Tests for [Background8Bit] function.
 func Test_Background8Bit(t *testing.T) {
 	t.Parallel()
 
-	tests := []struct {
-		color    int
-		expected string
-	}{
-		{0, "\x1b[48;5;0m"},
-		{255, "\x1b[48;5;255m"},
-		{-1, ""},
-		{256, ""},
-		// Additional edge cases
-		{128, "\x1b[48;5;128m"}, // Mid-range value
-		{1, "\x1b[48;5;1m"},     // Minimum valid positive
-		{254, "\x1b[48;5;254m"}, // Maximum - 1
-		{-100, ""},              // Large negative
-		{1000, ""},              // Large positive
+	tests := []color8BitTestCase{
+		{name: "-1", color: -1, expected: ""},
+		{name: "0", color: 0, expected: "\x1b[48;5;0m"},
+		{name: "1", color: 1, expected: "\x1b[48;5;1m"},
+		{name: "128", color: 128, expected: "\x1b[48;5;128m"},
+		{name: "254", color: 254, expected: "\x1b[48;5;254m"},
+		{name: "255", color: 255, expected: "\x1b[48;5;255m"},
+		{name: "256", color: 256, expected: ""},
 	}
 
-	for _, test := range tests {
-		result := ansi.Background8Bit(test.color)
-		require.Equal(t, test.expected, result, "Background8Bit(%d) = %q; want %q", test.color, result, test.expected)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			result := Background8Bit(tt.color)
+			require.Equal(t, tt.expected, result, "Background8Bit(%d) = %q; want %q", tt.color, result, tt.expected)
+		})
 	}
 }
 
-// Tests for [ansi.Foreground24Bit] function.
+// Tests for [Foreground24Bit] function.
 func Test_Foreground24Bit(t *testing.T) {
 	t.Parallel()
 
-	tests := []struct {
-		r, g, b  int
-		expected string
-	}{
-		{0, 0, 0, "\x1b[38;2;0;0;0m"},
-		{255, 255, 255, "\x1b[38;2;255;255;255m"},
-		{-1, 0, 0, ""},
-		{0, -1, 0, ""},
-		{0, 0, -1, ""},
-		{256, 0, 0, ""},
-		{0, 256, 0, ""},
-		{0, 0, 256, ""},
-		// Additional edge cases
-		{128, 64, 32, "\x1b[38;2;128;64;32m"},     // Mid-range values
-		{255, 0, 0, "\x1b[38;2;255;0;0m"},         // Pure red
-		{0, 255, 0, "\x1b[38;2;0;255;0m"},         // Pure green
-		{0, 0, 255, "\x1b[38;2;0;0;255m"},         // Pure blue
-		{1, 1, 1, "\x1b[38;2;1;1;1m"},             // Minimum valid positive
-		{254, 254, 254, "\x1b[38;2;254;254;254m"}, // Maximum - 1
-		{-1, -1, -1, ""},                          // All negative
-		{256, 256, 256, ""},                       // All over max
-		{255, 128, 0, "\x1b[38;2;255;128;0m"},     // Orange
+	tests := []color24BitTestCase{
+		{name: "-1,0,0", r: -1, g: 0, b: 0, expected: ""},
+		{name: "0,-1,0", r: 0, g: -1, b: 0, expected: ""},
+		{name: "0,0,-1", r: 0, g: 0, b: -1, expected: ""},
+		{name: "-1,-1,-1", r: -1, g: -1, b: -1, expected: ""},
+		{name: "0,0,0 - Black", r: 0, g: 0, b: 0, expected: "\x1b[38;2;0;0;0m"},
+		{name: "1,1,1", r: 1, g: 1, b: 1, expected: "\x1b[38;2;1;1;1m"},
+		{name: "128,64,32", r: 128, g: 64, b: 32, expected: "\x1b[38;2;128;64;32m"},
+		{name: "254,254,254", r: 254, g: 254, b: 254, expected: "\x1b[38;2;254;254;254m"},
+		{name: "255,0,0 - Red", r: 255, g: 0, b: 0, expected: "\x1b[38;2;255;0;0m"},
+		{name: "0,255,0 - Green", r: 0, g: 255, b: 0, expected: "\x1b[38;2;0;255;0m"},
+		{name: "0,0,255 - Blue", r: 0, g: 0, b: 255, expected: "\x1b[38;2;0;0;255m"},
+		{name: "255,128,0 - Orange", r: 255, g: 128, b: 0, expected: "\x1b[38;2;255;128;0m"},
+		{name: "255,255,255 - White", r: 255, g: 255, b: 255, expected: "\x1b[38;2;255;255;255m"},
+		{name: "256,0,0", r: 256, g: 0, b: 0, expected: ""},
+		{name: "0,256,0", r: 0, g: 256, b: 0, expected: ""},
+		{name: "0,0,256", r: 0, g: 0, b: 256, expected: ""},
+		{name: "256,256,256", r: 256, g: 256, b: 256, expected: ""},
 	}
 
-	for _, test := range tests {
-		result := ansi.Foreground24Bit(test.r, test.g, test.b)
-		require.Equal(t, test.expected, result, "Foreground24Bit(%d, %d, %d) = %q; want %q", test.r, test.g, test.b, result, test.expected)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			result := Foreground24Bit(tt.r, tt.g, tt.b)
+			require.Equal(t, tt.expected, result, "Foreground24Bit(%d, %d, %d) = %q; want %q", tt.r, tt.g, tt.b, result, tt.expected)
+		})
 	}
 }
 
-// Tests for [ansi.Background24Bit] function.
+// Tests for [Background24Bit] function.
 func Test_Background24Bit(t *testing.T) {
-	tests := []struct {
-		r, g, b  int
-		expected string
-	}{
-		{0, 0, 0, "\x1b[48;2;0;0;0m"},
-		{255, 255, 255, "\x1b[48;2;255;255;255m"},
-		{-1, 0, 0, ""},
-		{0, -1, 0, ""},
-		{0, 0, -1, ""},
-		{256, 0, 0, ""},
-		{0, 256, 0, ""},
-		{0, 0, 256, ""},
-		// Additional edge cases
-		{128, 64, 32, "\x1b[48;2;128;64;32m"},     // Mid-range values
-		{255, 0, 0, "\x1b[48;2;255;0;0m"},         // Pure red
-		{0, 255, 0, "\x1b[48;2;0;255;0m"},         // Pure green
-		{0, 0, 255, "\x1b[48;2;0;0;255m"},         // Pure blue
-		{1, 1, 1, "\x1b[48;2;1;1;1m"},             // Minimum valid positive
-		{254, 254, 254, "\x1b[48;2;254;254;254m"}, // Maximum - 1
-		{-1, -1, -1, ""},                          // All negative
-		{256, 256, 256, ""},                       // All over max
-		{255, 128, 0, "\x1b[48;2;255;128;0m"},     // Orange
+	t.Parallel()
+
+	tests := []color24BitTestCase{
+		{name: "-1,0,0", r: -1, g: 0, b: 0, expected: ""},
+		{name: "0,-1,0", r: 0, g: -1, b: 0, expected: ""},
+		{name: "0,0,-1", r: 0, g: 0, b: -1, expected: ""},
+		{name: "-1,-1,-1", r: -1, g: -1, b: -1, expected: ""},
+		{name: "0,0,0 - Black", r: 0, g: 0, b: 0, expected: "\x1b[48;2;0;0;0m"},
+		{name: "1,1,1", r: 1, g: 1, b: 1, expected: "\x1b[48;2;1;1;1m"},
+		{name: "128,64,32", r: 128, g: 64, b: 32, expected: "\x1b[48;2;128;64;32m"},
+		{name: "254,254,254", r: 254, g: 254, b: 254, expected: "\x1b[48;2;254;254;254m"},
+		{name: "255,0,0 - Red", r: 255, g: 0, b: 0, expected: "\x1b[48;2;255;0;0m"},
+		{name: "0,255,0 - Green", r: 0, g: 255, b: 0, expected: "\x1b[48;2;0;255;0m"},
+		{name: "0,0,255 - Blue", r: 0, g: 0, b: 255, expected: "\x1b[48;2;0;0;255m"},
+		{name: "255,128,0 - Orange", r: 255, g: 128, b: 0, expected: "\x1b[48;2;255;128;0m"},
+		{name: "255,255,255 - White", r: 255, g: 255, b: 255, expected: "\x1b[48;2;255;255;255m"},
+		{name: "256,0,0", r: 256, g: 0, b: 0, expected: ""},
+		{name: "0,256,0", r: 0, g: 256, b: 0, expected: ""},
+		{name: "0,0,256", r: 0, g: 0, b: 256, expected: ""},
+		{name: "256,256,256", r: 256, g: 256, b: 256, expected: ""},
 	}
 
 	for _, test := range tests {
-		result := ansi.Background24Bit(test.r, test.g, test.b)
-		require.Equal(t, test.expected, result, "Background24Bit(%d, %d, %d) = %q; want %q", test.r, test.g, test.b, result, test.expected)
+		t.Run(test.name, func(t *testing.T) {
+			t.Parallel()
+
+			result := Background24Bit(test.r, test.g, test.b)
+			require.Equal(t, test.expected, result, "Background24Bit(%d, %d, %d) = %q; want %q", test.r, test.g, test.b, result, test.expected)
+		})
 	}
 }

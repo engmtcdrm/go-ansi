@@ -1,100 +1,99 @@
-package ansi_test
+package ansi
 
 import (
 	"testing"
 
-	"github.com/engmtcdrm/go-ansi"
 	"github.com/stretchr/testify/require"
 )
 
-// Tests for [ansi.ScrollUp1] and [ansi.ScrollDown1] to ensure they are correctly defined as derived constants.
+// Tests for [ScrollUp1] and [ScrollDown1] to ensure they are correctly defined as derived constants.
 func Test_ScrollDerivedConstants(t *testing.T) {
 	t.Parallel()
 
-	require.Equal(t, ansi.ScrollUp(1), ansi.ScrollUp1, "ScrollUp1 should be equal to ScrollUp(1). ScrollUp")
-	require.Equal(t, ansi.ScrollDown(1), ansi.ScrollDown1, "ScrollDown1 should be equal to ScrollDown(1). ScrollDown")
+	require.Equal(t, ScrollUp(1), ScrollUp1, "ScrollUp1 should be equal to ScrollUp(1). ScrollUp")
+	require.Equal(t, ScrollDown(1), ScrollDown1, "ScrollDown1 should be equal to ScrollDown(1). ScrollDown")
 }
 
-// Tests for [ansi.ScrollDown] function.
+// Tests for [ScrollDown] function.
 func Test_ScrollDown(t *testing.T) {
 	t.Parallel()
 
-	t.Run("ScrollDown", func(t *testing.T) {
-		require.Equal(t, "\x1b[1T", ansi.ScrollDown(1), "ScrollDown(1) should return the correct ANSI escape code for scrolling down 1 line.")
-	})
+	tests := []intToStringTestCase{
+		{name: "-1", input: -1, expected: ""},
+		{name: "0", input: 0, expected: ""},
+		{name: "1", input: 1, expected: "\x1b[1T"},
+		{name: "100", input: 100, expected: "\x1b[100T"},
+	}
 
-	t.Run("ScrollDown negative", func(t *testing.T) {
-		require.Equal(t, "", ansi.ScrollDown(-1), "ScrollDown with a negative value should return an empty string.")
-	})
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 
-	t.Run("ScrollDown zero", func(t *testing.T) {
-		require.Equal(t, "", ansi.ScrollDown(0), "ScrollDown with a zero value should return an empty string.")
-	})
-
-	t.Run("ScrollDown large", func(t *testing.T) {
-		require.Equal(t, "\x1b[100T", ansi.ScrollDown(100), "ScrollDown with a large value should return the correct ANSI escape code for scrolling down 999 lines.")
-	})
+			result := ScrollDown(tt.input)
+			require.Equal(t, tt.expected, result, "ScrollDown(%d) = %q; want %q", tt.input, result, tt.expected)
+		})
+	}
 }
 
-// Tests for [ansi.ScrollDownN] function.
-func Test_ScrollDownN(t *testing.T) {
-	t.Parallel()
-
-	t.Run("ScrollDownN", func(t *testing.T) {
-		require.Equal(t, "\x1b[1T", ansi.ScrollDownN(1), "ScrollDownN(1) should return the correct ANSI escape code for scrolling down 1 line.")
-	})
-
-	t.Run("ScrollDownN negative", func(t *testing.T) {
-		require.Equal(t, "", ansi.ScrollDownN(-1), "ScrollDownN with a negative value should return an empty string.")
-	})
-
-	t.Run("ScrollDownN zero", func(t *testing.T) {
-		require.Equal(t, "", ansi.ScrollDownN(0), "ScrollDownN with a zero value should return an empty string.")
-	})
-
-	t.Run("ScrollDownN large", func(t *testing.T) {
-		require.Equal(t, "\x1b[100T", ansi.ScrollDownN(100), "ScrollDownN with a large value should return the correct ANSI escape code for scrolling down 999 lines.")
-	})
-}
-
-// Tests for [ansi.ScrollUp] function.
+// Tests for [ScrollUp] function.
 func Test_ScrollUp(t *testing.T) {
 	t.Parallel()
 
-	t.Run("ScrollUp", func(t *testing.T) {
-		require.Equal(t, "\x1b[1S", ansi.ScrollUp(1), "ScrollUp(1) should return the correct ANSI escape code for scrolling up 1 line.")
-	})
+	tests := []intToStringTestCase{
+		{name: "-1", input: -1, expected: ""},
+		{name: "0", input: 0, expected: ""},
+		{name: "1", input: 1, expected: "\x1b[1S"},
+		{name: "100", input: 100, expected: "\x1b[100S"},
+	}
 
-	t.Run("ScrollUp negative", func(t *testing.T) {
-		require.Equal(t, "", ansi.ScrollUp(-1), "ScrollUp with a negative value should return an empty string.")
-	})
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 
-	t.Run("ScrollUp zero", func(t *testing.T) {
-		require.Equal(t, "", ansi.ScrollUp(0), "ScrollUp with a zero value should return an empty string.")
-	})
-
-	t.Run("ScrollUp large", func(t *testing.T) {
-		require.Equal(t, "\x1b[100S", ansi.ScrollUp(100), "ScrollUp with a large value should return the correct ANSI escape code for scrolling up 100 lines.")
-	})
+			result := ScrollUp(tt.input)
+			require.Equal(t, tt.expected, result, "ScrollUp(%d) = %q; want %q", tt.input, result, tt.expected)
+		})
+	}
 }
 
-// Tests for [ansi.ScrollUpN] function.
+// Tests for [ScrollUpN] function.
 func Test_ScrollUpN(t *testing.T) {
 	t.Parallel()
 
-	t.Run("ScrollUpN", func(t *testing.T) {
-		require.Equal(t, "\x1b[1S", ansi.ScrollUpN(1), "ScrollUpN(1) should return the correct ANSI escape code for scrolling up 1 line.")
-	})
+	tests := []intToStringTestCase{
+		{name: "-1", input: -1, expected: ""},
+		{name: "0", input: 0, expected: ""},
+		{name: "1", input: 1, expected: "\x1b[1S"},
+		{name: "100", input: 100, expected: "\x1b[100S"},
+	}
 
-	t.Run("ScrollUpN negative", func(t *testing.T) {
-		require.Equal(t, "", ansi.ScrollUpN(-1), "ScrollUpN with a negative value should return an empty string.")
-	})
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 
-	t.Run("ScrollUpN zero", func(t *testing.T) {
-		require.Equal(t, "", ansi.ScrollUpN(0), "ScrollUpN with a zero value should return an empty string.")
-	})
+			result := ScrollUpN(tt.input)
+			require.Equal(t, tt.expected, result, "ScrollUpN(%d) = %q; want %q", tt.input, result, tt.expected)
+		})
+	}
+}
 
-	t.Run("ScrollUpN large", func(t *testing.T) {
-		require.Equal(t, "\x1b[100S", ansi.ScrollUpN(100), "ScrollUpN with a large value should return the correct ANSI escape code for scrolling up 100 lines.")
-	})
+// Tests for [ScrollDownN] function.
+func Test_ScrollDownN(t *testing.T) {
+	t.Parallel()
+
+	tests := []intToStringTestCase{
+		{name: "-1", input: -1, expected: ""},
+		{name: "0", input: 0, expected: ""},
+		{name: "1", input: 1, expected: "\x1b[1T"},
+		{name: "100", input: 100, expected: "\x1b[100T"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			result := ScrollDownN(tt.input)
+			require.Equal(t, tt.expected, result, "ScrollDownN(%d) = %q; want %q", tt.input, result, tt.expected)
+		})
+	}
 }

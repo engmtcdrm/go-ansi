@@ -1,191 +1,183 @@
-package ansi_test
+package ansi
 
 import (
 	"testing"
 
-	"github.com/engmtcdrm/go-ansi"
 	"github.com/stretchr/testify/require"
 )
 
-type cursorTestCase struct {
+type intToStringTestCase struct {
 	name     string
-	arg      int
+	input    int
 	expected string
 }
 
-// Tests for [ansi.CursorTopLeft] variable.
+// Tests for [CursorTopLeft] variable.
 func Test_CursorTopLeft(t *testing.T) {
 	t.Parallel()
 
-	expected := ansi.CursorPosition(1, 1)
-	require.Equal(t, expected, ansi.CursorTopLeft, "CursorTopLeft should be equal to its expected value.")
+	expected := CursorPosition(1, 1)
+	require.Equal(t, expected, CursorTopLeft, "CursorTopLeft should be equal to its expected value.")
 }
 
-// Tests for [ansi.CursorLineBegin] variable.
+// Tests for [CursorLineBegin] variable.
 func Test_CursorLineBegin(t *testing.T) {
 	t.Parallel()
 
-	expected := ansi.CursorHorizontalAbsolute(1)
-	require.Equal(t, expected, ansi.CursorLineBegin, "CursorLineBegin should be equal to its expected value.")
+	expected := CursorHorizontalAbsolute(1)
+	require.Equal(t, expected, CursorLineBegin, "CursorLineBegin should be equal to its expected value.")
 }
 
-// Tests for [ansi.CursorNextLine] variable.
+// Tests for [CursorNextLine] variable.
 func Test_CursorNextLine(t *testing.T) {
 	t.Parallel()
 
-	expected := ansi.CursorNextLineN(1)
-	require.Equal(t, expected, ansi.CursorNextLine, "CursorNextLine should be equal to its expected value.")
+	expected := CursorNextLineN(1)
+	require.Equal(t, expected, CursorNextLine, "CursorNextLine should be equal to its expected value.")
 }
 
-// Tests for [ansi.CursorPreviousLine] variable.
+// Tests for [CursorPreviousLine] variable.
 func Test_CursorPreviousLine(t *testing.T) {
 	t.Parallel()
 
-	expected := ansi.CursorPreviousLineN(1)
-	require.Equal(t, expected, ansi.CursorPreviousLine, "CursorPreviousLine should be equal to its expected value.")
+	expected := CursorPreviousLineN(1)
+	require.Equal(t, expected, CursorPreviousLine, "CursorPreviousLine should be equal to its expected value.")
 }
 
-// Tests for [ansi.CursorUp] function.
+// Tests for [CursorUp] function.
 func Test_CursorUp(t *testing.T) {
-	tests := []cursorTestCase{
-		{name: "CursorUp one", arg: 1, expected: "\x1b[A"},
-		{name: "CursorUp negative", arg: -1, expected: ""},
-		{name: "CursorUp zero", arg: 0, expected: ""},
-		{name: "CursorUp large", arg: 100, expected: "\x1b[100A"},
+	tests := []intToStringTestCase{
+		{name: "CursorUp one", input: 1, expected: "\x1b[A"},
+		{name: "CursorUp negative", input: -1, expected: ""},
+		{name: "CursorUp zero", input: 0, expected: ""},
+		{name: "CursorUp large", input: 100, expected: "\x1b[100A"},
 	}
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			result := ansi.CursorUp(tt.arg)
-			require.Equal(t, tt.expected, result, "CursorUp(%d) = %q; want %q", tt.arg, result, tt.expected)
+			result := CursorUp(tt.input)
+			require.Equal(t, tt.expected, result, "CursorUp(%d) = %q; want %q", tt.input, result, tt.expected)
 		})
 	}
 }
 
-// Tests for [ansi.CursorDown] function.
+// Tests for [CursorDown] function.
 func Test_CursorDown(t *testing.T) {
-	tests := []cursorTestCase{
-		{name: "CursorDown one", arg: 1, expected: "\x1b[B"},
-		{name: "CursorDown negative", arg: -1, expected: ""},
-		{name: "CursorDown zero", arg: 0, expected: ""},
-		{name: "CursorDown large", arg: 100, expected: "\x1b[100B"},
+	tests := []intToStringTestCase{
+		{name: "CursorDown one", input: 1, expected: "\x1b[B"},
+		{name: "CursorDown negative", input: -1, expected: ""},
+		{name: "CursorDown zero", input: 0, expected: ""},
+		{name: "CursorDown large", input: 100, expected: "\x1b[100B"},
 	}
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			result := ansi.CursorDown(tt.arg)
-			require.Equal(t, tt.expected, result, "CursorDown(%d) = %q; want %q", tt.arg, result, tt.expected)
+			result := CursorDown(tt.input)
+			require.Equal(t, tt.expected, result, "CursorDown(%d) = %q; want %q", tt.input, result, tt.expected)
 		})
 	}
 }
 
-// Tests for [ansi.CursorForward] function.
+// Tests for [CursorForward] function.
 func Test_CursorForward(t *testing.T) {
-	tests := []cursorTestCase{
-		{name: "CursorForward one", arg: 1, expected: "\x1b[C"},
-		{name: "CursorForward negative", arg: -1, expected: ""},
-		{name: "CursorForward zero", arg: 0, expected: ""},
-		{name: "CursorForward large", arg: 100, expected: "\x1b[100C"},
+	tests := []intToStringTestCase{
+		{name: "CursorForward one", input: 1, expected: "\x1b[C"},
+		{name: "CursorForward negative", input: -1, expected: ""},
+		{name: "CursorForward zero", input: 0, expected: ""},
+		{name: "CursorForward large", input: 100, expected: "\x1b[100C"},
 	}
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			result := ansi.CursorForward(tt.arg)
-			require.Equal(t, tt.expected, result, "CursorForward(%d) = %q; want %q", tt.arg, result, tt.expected)
+			result := CursorForward(tt.input)
+			require.Equal(t, tt.expected, result, "CursorForward(%d) = %q; want %q", tt.input, result, tt.expected)
 		})
 	}
 }
 
-// Tests for [ansi.CursorBackward] function.
+// Tests for [CursorBackward] function.
 func Test_CursorBackward(t *testing.T) {
-	tests := []cursorTestCase{
-		{name: "CursorBackward one", arg: 1, expected: "\x1b[D"},
-		{name: "CursorBackward negative", arg: -1, expected: ""},
-		{name: "CursorBackward zero", arg: 0, expected: ""},
-		{name: "CursorBackward large", arg: 100, expected: "\x1b[100D"},
+	tests := []intToStringTestCase{
+		{name: "CursorBackward one", input: 1, expected: "\x1b[D"},
+		{name: "CursorBackward negative", input: -1, expected: ""},
+		{name: "CursorBackward zero", input: 0, expected: ""},
+		{name: "CursorBackward large", input: 100, expected: "\x1b[100D"},
 	}
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			result := ansi.CursorBackward(tt.arg)
-			require.Equal(t, tt.expected, result, "CursorBackward(%d) = %q; want %q", tt.arg, result, tt.expected)
+			result := CursorBackward(tt.input)
+			require.Equal(t, tt.expected, result, "CursorBackward(%d) = %q; want %q", tt.input, result, tt.expected)
 		})
 	}
 }
 
-// Tests for [ansi.CursorNextLineN] function.
+// Tests for [CursorNextLineN] function.
 func Test_CursorNextLineN(t *testing.T) {
-	tests := []cursorTestCase{
-		{name: "CursorNextLineN", arg: 1, expected: "\x1b[E"},
-		{name: "CursorNextLineN negative", arg: -1, expected: ""},
-		{name: "CursorNextLineN zero", arg: 0, expected: ""},
-		{name: "CursorNextLineN large", arg: 100, expected: "\x1b[100E"},
+	tests := []intToStringTestCase{
+		{name: "CursorNextLineN", input: 1, expected: "\x1b[E"},
+		{name: "CursorNextLineN negative", input: -1, expected: ""},
+		{name: "CursorNextLineN zero", input: 0, expected: ""},
+		{name: "CursorNextLineN large", input: 100, expected: "\x1b[100E"},
 	}
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			result := ansi.CursorNextLineN(tt.arg)
-			require.Equal(t, tt.expected, result, "CursorNextLineN(%d) = %q; want %q", tt.arg, result, tt.expected)
+			result := CursorNextLineN(tt.input)
+			require.Equal(t, tt.expected, result, "CursorNextLineN(%d) = %q; want %q", tt.input, result, tt.expected)
 		})
 	}
 }
 
-// Tests for [ansi.CursorPreviousLineN] function.
+// Tests for [CursorPreviousLineN] function.
 func Test_CursorPreviousLineN(t *testing.T) {
-	tests := []cursorTestCase{
-		{name: "CursorPreviousLineN", arg: 1, expected: "\x1b[F"},
-		{name: "CursorPreviousLineN negative", arg: -1, expected: ""},
-		{name: "CursorPreviousLineN zero", arg: 0, expected: ""},
-		{name: "CursorPreviousLineN large", arg: 100, expected: "\x1b[100F"},
+	tests := []intToStringTestCase{
+		{name: "CursorPreviousLineN", input: 1, expected: "\x1b[F"},
+		{name: "CursorPreviousLineN negative", input: -1, expected: ""},
+		{name: "CursorPreviousLineN zero", input: 0, expected: ""},
+		{name: "CursorPreviousLineN large", input: 100, expected: "\x1b[100F"},
 	}
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			result := ansi.CursorPreviousLineN(tt.arg)
-			require.Equal(t, tt.expected, result, "CursorPreviousLineN(%d) = %q; want %q", tt.arg, result, tt.expected)
+			result := CursorPreviousLineN(tt.input)
+			require.Equal(t, tt.expected, result, "CursorPreviousLineN(%d) = %q; want %q", tt.input, result, tt.expected)
 		})
 	}
 }
 
-// Tests for [ansi.CursorHorizontalAbsolute] function.
+// Tests for [CursorHorizontalAbsolute] function.
 func Test_CursorHorizontalAbsolute(t *testing.T) {
-	tests := []cursorTestCase{
-		{name: "CursorHorizontalAbsolute one", arg: 1, expected: "\x1b[G"},
-		{name: "CursorHorizontalAbsolute negative", arg: -1, expected: ""},
-		{name: "CursorHorizontalAbsolute zero", arg: 0, expected: ""},
-		{name: "CursorHorizontalAbsolute large", arg: 100, expected: "\x1b[100G"},
+	tests := []intToStringTestCase{
+		{name: "CursorHorizontalAbsolute one", input: 1, expected: "\x1b[G"},
+		{name: "CursorHorizontalAbsolute negative", input: -1, expected: ""},
+		{name: "CursorHorizontalAbsolute zero", input: 0, expected: ""},
+		{name: "CursorHorizontalAbsolute large", input: 100, expected: "\x1b[100G"},
 	}
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			result := ansi.CursorHorizontalAbsolute(tt.arg)
-			require.Equal(t, tt.expected, result, "CursorHorizontalAbsolute(%d) = %q; want %q", tt.arg, result, tt.expected)
+			result := CursorHorizontalAbsolute(tt.input)
+			require.Equal(t, tt.expected, result, "CursorHorizontalAbsolute(%d) = %q; want %q", tt.input, result, tt.expected)
 		})
 	}
 }
 
-// Tests for [ansi.CursorPosition] function.
+// Tests for [CursorPosition] function.
 func Test_CursorPosition(t *testing.T) {
 	tests := []struct {
 		name        string
@@ -194,7 +186,6 @@ func Test_CursorPosition(t *testing.T) {
 	}{
 		{name: "CursorPosition 1,1", row: 1, column: 1, expected: "\x1b[H"},
 		{name: "CursorPosition 10,20", row: 10, column: 20, expected: "\x1b[10;20H"},
-		// Edge cases
 		{name: "CursorPosition 0,0", row: 0, column: 0, expected: ""},                      // Both zero
 		{name: "CursorPosition -1,-1", row: -1, column: -1, expected: ""},                  // Both negative
 		{name: "CursorPosition 0,1", row: 0, column: 1, expected: ""},                      // Row zero
@@ -205,11 +196,10 @@ func Test_CursorPosition(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			result := ansi.CursorPosition(tt.row, tt.column)
+			result := CursorPosition(tt.row, tt.column)
 			require.Equal(t, tt.expected, result, "CursorPosition(%d, %d) = %q; want %q", tt.row, tt.column, result, tt.expected)
 		})
 	}
