@@ -2,6 +2,8 @@ package ansi
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 type ansiCase struct {
@@ -10,34 +12,78 @@ type ansiCase struct {
 	expectedLen int
 }
 
+var ansiCaseTests = []ansiCase{
+	{name: "SGR reset", input: "\x1b[0m", expectedLen: 4},
+	{name: "SGR red then text", input: "\x1b[31mhello", expectedLen: 5},
+	{name: "CSI with valid intermediate", input: "\x1b[0 q", expectedLen: 5},
+	{name: "OSC window title then BEL", input: "\x1b]0;My Title\x07", expectedLen: 13},
+	{name: "OSC window title then ST", input: "\x1b]0;Title\x1b\\", expectedLen: 11},
+	{name: "DCS with ST terminator", input: "\x1bPq#0;2;0;0;0\x1b\\", expectedLen: 15},
+	{name: "DCS canceled by CAN", input: "\x1bPqdata\x18z", expectedLen: 7},
+	{name: "SOS with ST terminator", input: "\x1bXhello\x1b\\", expectedLen: 9},
+	{name: "PM with ST terminator", input: "\x1b^msg\x1b\\", expectedLen: 7},
+	{name: "APC with ST terminator", input: "\x1b_data\x1b\\", expectedLen: 8},
+	{name: "two-byte Fe", input: "\x1bD", expectedLen: 2},
+	{name: "two-byte Fp", input: "\x1b7", expectedLen: 2},
+	{name: "nF with multiple intermediates", input: "\x1b !Fx", expectedLen: 4},
+	{name: "nF with invalid character", input: "\x1b 語!F", expectedLen: 0},
+	{name: "malformed CSI remains split", input: "\x1b[ 1mok", expectedLen: 0},
+	{name: "C1 CSI is not parsed", input: "\x9B31mhello", expectedLen: 0},
+	{name: "7-bit OSC does not accept C1 ST", input: "\x1b]0;Title\x9Cz", expectedLen: 0},
+	{name: "unterminated DCS", input: "\x1bPqpayload", expectedLen: 0},
+	{name: "invalid escape sequence", input: "\x1b語", expectedLen: 0},
+}
+
+func Benchmark_EscapeLength(b *testing.B) {
+	var tests = make([]ansiCase, len(ansiCaseTests))
+	copy(tests, ansiCaseTests)
+
+	for _, tt := range tests {
+		b.Run(tt.name, func(b *testing.B) {
+			b.ReportAllocs()
+			b.ResetTimer()
+
+			for i := 0; i < b.N; i++ {
+				returnedLen := EscapeLength(tt.input)
+				if returnedLen != tt.expectedLen {
+					b.Fatalf("EscapeLength returned %d, expected %d", returnedLen, tt.expectedLen)
+				}
+			}
+		})
+	}
+}
+
+// Tests for [EscapeLength] function.
+func Test_EscapeLength(t *testing.T) {
+	t.Parallel()
+
+	var tests = make([]ansiCase, len(ansiCaseTests))
+	copy(tests, ansiCaseTests)
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			type customType string
+			type customRunes []rune
+
+			require.Equal(t, tt.expectedLen, EscapeLength(tt.input))
+			require.Equal(t, tt.expectedLen, EscapeLength([]byte(tt.input)))
+			require.Equal(t, tt.expectedLen, EscapeLength([]rune(tt.input)))
+			require.Equal(t, tt.expectedLen, EscapeLength(customType(tt.input)))
+			require.Equal(t, tt.expectedLen, EscapeLength(customRunes([]rune(tt.input))))
+		})
+	}
+}
+
 // Tests for [escapeLength] function.
 func Test_escapeLength(t *testing.T) {
 	t.Parallel()
 
-	tests := []ansiCase{
-		{name: "SGR reset", input: "\x1b[0m", expectedLen: 4},
-		{name: "SGR red then text", input: "\x1b[31mhello", expectedLen: 5},
-		{name: "CSI with valid intermediate", input: "\x1b[0 q", expectedLen: 5},
-		{name: "OSC window title then BEL", input: "\x1b]0;My Title\x07", expectedLen: 13},
-		{name: "OSC window title then ST", input: "\x1b]0;Title\x1b\\", expectedLen: 11},
-		{name: "DCS with ST terminator", input: "\x1bPq#0;2;0;0;0\x1b\\", expectedLen: 15},
-		{name: "DCS canceled by CAN", input: "\x1bPqdata\x18z", expectedLen: 7},
-		{name: "SOS with ST terminator", input: "\x1bXhello\x1b\\", expectedLen: 9},
-		{name: "PM with ST terminator", input: "\x1b^msg\x1b\\", expectedLen: 7},
-		{name: "APC with ST terminator", input: "\x1b_data\x1b\\", expectedLen: 8},
-		{name: "two-byte Fe", input: "\x1bD", expectedLen: 2},
-		{name: "two-byte Fp", input: "\x1b7", expectedLen: 2},
-		{name: "nF with multiple intermediates", input: "\x1b !Fx", expectedLen: 4},
-		{name: "nF with invalid character", input: "\x1b 語!F", expectedLen: 0},
-		{name: "malformed CSI remains split", input: "\x1b[ 1mok", expectedLen: 0},
-		{name: "C1 CSI is not parsed", input: "\x9B31mhello", expectedLen: 0},
-		{name: "7-bit OSC does not accept C1 ST", input: "\x1b]0;Title\x9Cz", expectedLen: 0},
-		{name: "unterminated DCS", input: "\x1bPqpayload", expectedLen: 0},
-		{name: "invalid escape sequence", input: "\x1b語", expectedLen: 0},
-	}
+	var tests = make([]ansiCase, len(ansiCaseTests))
+	copy(tests, ansiCaseTests)
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
@@ -64,7 +110,6 @@ func Test_csiBodyLength(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
@@ -89,7 +134,6 @@ func Test_oscLength(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
@@ -118,7 +162,6 @@ func Test_stSequenceLength(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 

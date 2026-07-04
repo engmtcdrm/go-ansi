@@ -4,35 +4,35 @@ package ansi
 // https://github.com/clipperhouse/uax29/blob/master/graphemes/ansi.go
 
 // escapeLengthRune returns the byte length of a valid 7-bit ANSI escape
-// sequence at the start of data, or 0 if none.
+// sequence at the start of input, or 0 if none.
 //
 // Recognized forms (ECMA-48 / ISO 6429):
 //   - CSI: ESC [ then parameter bytes (0x30-0x3F), intermediate (0x20-0x2F), final (0x40-0x7E)
 //   - OSC: ESC ] then payload until BEL (0x07), 7-bit ST (ESC \), CAN (0x18), or SUB (0x1A)
 //   - DCS, SOS, PM, APC: ESC P/X/^/_ then payload until 7-bit ST (ESC \), CAN, or SUB
 //   - Two-byte: ESC + Fe/Fs (0x40-0x7E excluding above), or Fp (0x30-0x3F), or nF (0x20-0x2F then final)
-func escapeLengthRune(data []rune) int {
-	n := len(data)
-	if n < 2 || data[0] != byteEscape {
+func escapeLengthRune[T ~[]rune](input T) int {
+	n := len(input)
+	if n < 2 || input[0] != escape {
 		return 0
 	}
 
-	b1 := data[1]
+	b1 := input[1]
 	switch b1 {
 	case '[': // CSI
-		body := csiBodyLengthRune(data[2:])
+		body := csiBodyLengthRune(input[2:])
 		if body == 0 {
 			return 0
 		}
 		return 2 + body
 	case ']': // OSC - allows BEL or 7-bit ST terminator
-		body := oscLengthRune(data[2:])
+		body := oscLengthRune(input[2:])
 		if body < 0 {
 			return 0
 		}
 		return 2 + body
 	case 'P', 'X', '^', '_': // DCS, SOS, PM, APC
-		body := stSequenceLengthRune(data[2:])
+		body := stSequenceLengthRune(input[2:])
 		if body < 0 {
 			return 0
 		}
@@ -43,82 +43,112 @@ func escapeLengthRune(data []rune) int {
 		// Fe/Fs two-byte; [ ] P X ^ _ handled above
 		return 2
 	}
+
 	if b1 >= 0x30 && b1 <= 0x3F {
 		// Fp (private) two-byte
 		return 2
 	}
+
 	if b1 >= 0x20 && b1 <= 0x2F {
-		// nF: intermediates then one final (0x30-0x7E)
-		i := 2
-		for i < n && data[i] >= 0x20 && data[i] <= 0x2F {
-			i++
-		}
-		if i < n && data[i] >= 0x30 && data[i] <= 0x7E {
-			return i + 1
-		}
-		return 0
+		return intermediateThenFinalLengthRune(input)
 	}
 
 	return 0
 }
 
-// csiBodyLength returns the length of the CSI body (param/intermediate/final bytes).
-// data is the slice after "ESC [".
+// csiBodyLengthRune returns the length of the CSI body
+// (param/intermediate/final bytes). Input is the slice after "ESC [".
+//
 // Per ECMA-48, the CSI body has the form:
 //
 //	parameters (0x30–0x3F)*, intermediates (0x20–0x2F)*, final (0x40–0x7E)
 //
 // Once an intermediate byte is seen, subsequent parameter bytes are invalid.
-func csiBodyLengthRune(data []rune) int {
+func csiBodyLengthRune[T ~[]rune](input T) int {
 	seenIntermediate := false
-	for i := 0; i < len(data); i++ {
-		b := data[i]
+	for i := 0; i < len(input); i++ {
+		b := input[i]
 		if b >= 0x30 && b <= 0x3F {
 			if seenIntermediate {
 				return 0
 			}
 			continue
 		}
+
 		if b >= 0x20 && b <= 0x2F {
 			seenIntermediate = true
 			continue
 		}
+
 		if b >= 0x40 && b <= 0x7E {
 			return i + 1
 		}
+
 		return 0
 	}
+
 	return 0
 }
 
-// oscLengthRune returns the length of the OSC body.
-// data is the slice after "ESC ]".
+// intermediateThenFinalLengthRune returns the length of a two-byte escape
+// sequence with intermediates then final. Input is the slice after "ESC".
+//
+// Per ECMA-48, the sequence has the form:
+//
+//	intermediate (0x20–0x2F)*, final (0x30–0x7E)
+//
+// Once an intermediate byte is seen, subsequent parameter bytes are invalid.
+func intermediateThenFinalLengthRune[T ~[]rune](input T) int {
+	n := len(input)
+	if n < 3 {
+		return 0
+	}
+
+	i := 2
+	for i < n && input[i] >= 0x20 && input[i] <= 0x2F {
+		i++
+	}
+
+	if i < n && input[i] >= 0x30 && input[i] <= 0x7E {
+		return i + 1
+	}
+
+	return 0
+}
+
+// oscLengthRune returns the length of the OSC body. Input is the slice after
+// "ESC ]".
 //
 // Returns:
 //   - n >= 0: consumed body length (includes BEL/ST terminator when present)
 //   - -1: not terminated in the provided data
 //
-// OSC accepts BEL (0x07) or 7-bit ST (ESC \) as terminators by widespread convention.
+// OSC accepts BEL (0x07) or 7-bit ST (ESC \) as terminators by widespread
+// convention.
+//
 // Per ECMA-48, CAN (0x18) and SUB (0x1A) cancel the control string; in that
 // case they are not part of the OSC sequence length.
-func oscLengthRune(data []rune) int {
-	for i := 0; i < len(data); i++ {
-		b := data[i]
-		if b == byteBell {
+func oscLengthRune[T ~[]rune](input T) int {
+	for i := 0; i < len(input); i++ {
+		b := input[i]
+		if b == bell {
 			return i + 1
 		}
-		if b == byteCancel || b == byteSubstitute {
+
+		if b == cancel || b == substitute {
 			return i
 		}
-		if b == byteEscape && i+1 < len(data) && data[i+1] == '\\' {
+
+		if b == escape && i+1 < len(input) && input[i+1] == '\\' {
 			return i + 2
 		}
 	}
+
 	return -1
 }
 
-// stSequenceLength returns the length of a control-string body.
-// data is the slice after "ESC x".
+// stSequenceLengthRune returns the length of a control-string body. Input is
+// the slice after "ESC x".
 //
 // Returns:
 //   - n >= 0: consumed body length (includes ST terminator when present)
@@ -128,14 +158,16 @@ func oscLengthRune(data []rune) int {
 // ST here is the 7-bit form (ESC \).
 // CAN (0x18) and SUB (0x1A) cancel the control string; in that case they are
 // not part of the sequence length.
-func stSequenceLengthRune(data []rune) int {
-	for i := 0; i < len(data); i++ {
-		if data[i] == byteCancel || data[i] == byteSubstitute {
+func stSequenceLengthRune[T ~[]rune](input T) int {
+	for i := 0; i < len(input); i++ {
+		if input[i] == cancel || input[i] == substitute {
 			return i
 		}
-		if data[i] == byteEscape && i+1 < len(data) && data[i+1] == '\\' {
+
+		if input[i] == escape && i+1 < len(input) && input[i+1] == '\\' {
 			return i + 2
 		}
 	}
+
 	return -1
 }
