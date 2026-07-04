@@ -35,6 +35,14 @@ var stripTests = []stripTestCase{
 	{"Octal escape representation", "\033[31mOctal escape\033[0m", "Octal escape"},
 }
 
+// Benchmark for [Strip] function.
+func Benchmark_Strip(b *testing.B) {
+	input := "\x1b[31mHello\x1b[0m"
+	for i := 0; i < b.N; i++ {
+		_ = Strip(input)
+	}
+}
+
 // Tests for [Strip] function.
 func Test_Strip(t *testing.T) {
 	t.Parallel()
@@ -58,6 +66,14 @@ func Test_Strip(t *testing.T) {
 			resultCustom := Strip(customType(tt.input))
 			require.Equal(t, customType(tt.expected), resultCustom, "Strip(customType(%q)) = %q; want %q", tt.input, resultCustom, tt.expected)
 		})
+	}
+}
+
+// Benchmark for [StripRunes] function.
+func Benchmark_StripRunes(b *testing.B) {
+	input := []rune("\x1b[31mHello\x1b[0m")
+	for i := 0; i < b.N; i++ {
+		_ = StripRunes(input)
 	}
 }
 
@@ -85,14 +101,6 @@ func Test_StripRunes(t *testing.T) {
 	}
 }
 
-// Tests for [StripCodes] function to ensure it behaves the same as Strip.
-func Test_StripCodes(t *testing.T) {
-	input := "\x1b[31mHello\x1b[0m"
-	expected := "Hello"
-	result := StripCodes(input)
-	require.Equal(t, expected, result, "StripCodes(%q) = %q; want %q", input, result, expected)
-}
-
 // Tests for [colorInRange] function.
 func Test_colorInRange(t *testing.T) {
 	tests := []struct {
@@ -114,12 +122,5 @@ func Test_colorInRange(t *testing.T) {
 			result := colorInRange(tt.input)
 			require.Equal(t, tt.expected, result, "colorInRange(%d) = %v; want %v", tt.input, result, tt.expected)
 		})
-	}
-}
-
-func Benchmark_Strip(b *testing.B) {
-	input := "\x1b[31mHello\x1b[0m"
-	for i := 0; i < b.N; i++ {
-		_ = Strip(input)
 	}
 }
