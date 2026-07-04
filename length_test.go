@@ -88,9 +88,7 @@ func Test_escapeLength(t *testing.T) {
 			t.Parallel()
 
 			returnedLen := escapeLength(tt.input)
-			if returnedLen != tt.expectedLen {
-				t.Fatalf("EscapeLength returned %d, expected %d", returnedLen, tt.expectedLen)
-			}
+			require.Equal(t, tt.expectedLen, returnedLen, "escapeLength returned %d, expected %d", returnedLen, tt.expectedLen)
 		})
 	}
 }
@@ -114,9 +112,7 @@ func Test_csiBodyLength(t *testing.T) {
 			t.Parallel()
 
 			returnedLen := csiBodyLength(tt.input[2:])
-			if returnedLen != tt.expectedLen {
-				t.Fatalf("csiBodyLength returned %d, expected %d", returnedLen, tt.expectedLen)
-			}
+			require.Equal(t, tt.expectedLen, returnedLen, "csiBodyLength returned %d, expected %d", returnedLen, tt.expectedLen)
 		})
 	}
 }
@@ -138,9 +134,7 @@ func Test_oscLength(t *testing.T) {
 			t.Parallel()
 
 			returnedLen := oscLength(tt.input[2:])
-			if returnedLen != tt.expectedLen {
-				t.Fatalf("oscLength returned %d, expected %d", returnedLen, tt.expectedLen)
-			}
+			require.Equal(t, tt.expectedLen, returnedLen, "oscLength returned %d, expected %d", returnedLen, tt.expectedLen)
 		})
 	}
 }
@@ -166,9 +160,7 @@ func Test_stSequenceLength(t *testing.T) {
 			t.Parallel()
 
 			returnedLen := stSequenceLength(tt.input[2:])
-			if returnedLen != tt.expectedLen {
-				t.Fatalf("stSequenceLength returned %d, expected %d", returnedLen, tt.expectedLen)
-			}
+			require.Equal(t, tt.expectedLen, returnedLen, "stSequenceLength returned %d, expected %d", returnedLen, tt.expectedLen)
 		})
 	}
 }

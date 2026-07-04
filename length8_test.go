@@ -1,9 +1,13 @@
 package ansi
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/stretchr/testify/require"
+)
 
 // Tests for [escapeLength8Bit] function.
-func Test_EscapeLength8Bit(t *testing.T) {
+func Test_escapeLength8Bit(t *testing.T) {
 	t.Parallel()
 
 	tests := []ansiCase{
@@ -30,9 +34,7 @@ func Test_EscapeLength8Bit(t *testing.T) {
 			t.Parallel()
 
 			returnedLen := escapeLength8Bit(tt.input)
-			if returnedLen != tt.expectedLen {
-				t.Fatalf("EscapeLength8Bit returned %d, expected %d", returnedLen, tt.expectedLen)
-			}
+			require.Equal(t, tt.expectedLen, returnedLen, "escapeLength8Bit returned %d, expected %d", returnedLen, tt.expectedLen)
 		})
 	}
 }
@@ -55,9 +57,7 @@ func Test_oscLengthC1(t *testing.T) {
 			t.Parallel()
 
 			returnedLen := oscLengthC1(tt.input[1:])
-			if returnedLen != tt.expectedLen {
-				t.Fatalf("oscLengthC1 returned %d, expected %d", returnedLen, tt.expectedLen)
-			}
+			require.Equal(t, tt.expectedLen, returnedLen, "oscLengthC1 returned %d, expected %d", returnedLen, tt.expectedLen)
 		})
 	}
 }
@@ -83,9 +83,7 @@ func Test_stSequenceLengthC1(t *testing.T) {
 			t.Parallel()
 
 			returnedLen := stSequenceLengthC1(tt.input[1:])
-			if returnedLen != tt.expectedLen {
-				t.Fatalf("stSequenceLengthC1 returned %d, expected %d", returnedLen, tt.expectedLen)
-			}
+			require.Equal(t, tt.expectedLen, returnedLen, "stSequenceLengthC1 returned %d, expected %d", returnedLen, tt.expectedLen)
 		})
 	}
 }

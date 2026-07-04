@@ -2,6 +2,8 @@ package ansi
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 // Tests for [escapeLength8BitRune] function.
@@ -37,9 +39,7 @@ func Test_escapeLength8BitRune(t *testing.T) {
 			}
 
 			returnedLen := escapeLength8BitRune(runeInput)
-			if returnedLen != tt.expectedLen {
-				t.Fatalf("escapeLength8BitRune returned %d, expected %d", returnedLen, tt.expectedLen)
-			}
+			require.Equal(t, tt.expectedLen, returnedLen, "escapeLength8BitRune returned %d, expected %d", returnedLen, tt.expectedLen)
 		})
 	}
 }
@@ -67,9 +67,7 @@ func Test_oscLengthC1Rune(t *testing.T) {
 			}
 
 			returnedLen := oscLengthC1Rune(runeInput[1:])
-			if returnedLen != tt.expectedLen {
-				t.Fatalf("oscLengthC1Rune returned %d, expected %d", returnedLen, tt.expectedLen)
-			}
+			require.Equal(t, tt.expectedLen, returnedLen, "oscLengthC1Rune returned %d, expected %d", returnedLen, tt.expectedLen)
 		})
 	}
 }
@@ -80,14 +78,14 @@ func Test_stSequenceLengthC1Rune(t *testing.T) {
 
 	tests := []ansiCase{
 		{name: "DCS with C1 ST terminator", input: "\x90qpayload\x9C", expectedLen: 9},
-		// {name: "DCS canceled by CAN", input: "\x90qpayload\x18x", expectedLen: 8},
-		// {name: "SOS with C1 ST terminator", input: "\x98hello\x9C", expectedLen: 6},
-		// {name: "PM with C1 ST terminator", input: "\x9Emsg\x9C", expectedLen: 4},
-		// {name: "APC with C1 ST terminator", input: "\x9Fdata\x9C", expectedLen: 5},
-		// {name: "unterminated DCS", input: "\x90qpayload", expectedLen: -1},
-		// {name: "unterminated SOS", input: "\x98hello", expectedLen: -1},
-		// {name: "unterminated PM", input: "\x9Emsg", expectedLen: -1},
-		// {name: "unterminated APC", input: "\x9Fdata", expectedLen: -1},
+		{name: "DCS canceled by CAN", input: "\x90qpayload\x18x", expectedLen: 8},
+		{name: "SOS with C1 ST terminator", input: "\x98hello\x9C", expectedLen: 6},
+		{name: "PM with C1 ST terminator", input: "\x9Emsg\x9C", expectedLen: 4},
+		{name: "APC with C1 ST terminator", input: "\x9Fdata\x9C", expectedLen: 5},
+		{name: "unterminated DCS", input: "\x90qpayload", expectedLen: -1},
+		{name: "unterminated SOS", input: "\x98hello", expectedLen: -1},
+		{name: "unterminated PM", input: "\x9Emsg", expectedLen: -1},
+		{name: "unterminated APC", input: "\x9Fdata", expectedLen: -1},
 	}
 
 	for _, tt := range tests {
@@ -100,9 +98,7 @@ func Test_stSequenceLengthC1Rune(t *testing.T) {
 			}
 
 			returnedLen := stSequenceLengthC1Rune(runeInput[1:])
-			if returnedLen != tt.expectedLen {
-				t.Fatalf("stSequenceLengthC1Rune returned %d, expected %d", returnedLen, tt.expectedLen)
-			}
+			require.Equal(t, tt.expectedLen, returnedLen, "stSequenceLengthC1Rune returned %d, expected %d", returnedLen, tt.expectedLen)
 		})
 	}
 }

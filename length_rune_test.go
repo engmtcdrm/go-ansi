@@ -2,6 +2,8 @@ package ansi
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 // Tests for [escapeLengthRune] function.
@@ -16,9 +18,7 @@ func Test_escapeLengthRune(t *testing.T) {
 			t.Parallel()
 
 			returnedLen := escapeLengthRune([]rune(tt.input))
-			if returnedLen != tt.expectedLen {
-				t.Fatalf("escapeLengthRune returned %d, expected %d", returnedLen, tt.expectedLen)
-			}
+			require.Equal(t, tt.expectedLen, returnedLen, "escapeLengthRune returned %d, expected %d", returnedLen, tt.expectedLen)
 		})
 	}
 }
@@ -42,9 +42,7 @@ func Test_csiBodyLengthRune(t *testing.T) {
 			t.Parallel()
 
 			returnedLen := csiBodyLengthRune([]rune(tt.input[2:]))
-			if returnedLen != tt.expectedLen {
-				t.Fatalf("csiBodyLengthRune returned %d, expected %d", returnedLen, tt.expectedLen)
-			}
+			require.Equal(t, tt.expectedLen, returnedLen, "csiBodyLengthRune returned %d, expected %d", returnedLen, tt.expectedLen)
 		})
 	}
 }
@@ -66,9 +64,7 @@ func Test_oscLengthRune(t *testing.T) {
 			t.Parallel()
 
 			returnedLen := oscLengthRune([]rune(tt.input[2:]))
-			if returnedLen != tt.expectedLen {
-				t.Fatalf("oscLengthRune returned %d, expected %d", returnedLen, tt.expectedLen)
-			}
+			require.Equal(t, tt.expectedLen, returnedLen, "oscLengthRune returned %d, expected %d", returnedLen, tt.expectedLen)
 		})
 	}
 }
@@ -94,9 +90,7 @@ func Test_stSequenceLengthRune(t *testing.T) {
 			t.Parallel()
 
 			returnedLen := stSequenceLengthRune([]rune(tt.input[2:]))
-			if returnedLen != tt.expectedLen {
-				t.Fatalf("stSequenceLengthRune returned %d, expected %d", returnedLen, tt.expectedLen)
-			}
+			require.Equal(t, tt.expectedLen, returnedLen, "stSequenceLengthRune returned %d, expected %d", returnedLen, tt.expectedLen)
 		})
 	}
 }
