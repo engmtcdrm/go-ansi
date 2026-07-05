@@ -19,7 +19,7 @@ func EscapeLength8Bit[T ~string | ~[]byte | ~[]rune](input T) int {
 
 	switch rt.Kind() {
 	case reflect.String:
-		return escapeLength(rv.String())
+		return escapeLength8Bit(rv.String())
 	case reflect.Slice:
 		if rt.Elem().Kind() == reflect.Uint8 {
 			dst := reflect.MakeSlice(reflect.TypeOf([]byte(nil)), rv.Len(), rv.Len())
