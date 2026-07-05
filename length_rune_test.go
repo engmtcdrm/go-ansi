@@ -68,13 +68,8 @@ func Test_oscLengthRune(t *testing.T) {
 	t.Parallel()
 
 	errFormat := getErrFormat(t, "oscLengthRune")
-	tests := []ansiCase{
-		{name: "OSC window title then BEL", input: "\x1b]0;My Title\x07", expectedLen: 11},
-		{name: "OSC window title then ST", input: "\x1b]0;Title\x1b\\", expectedLen: 9},
-		{name: "OSC unterminated", input: "\x1b]0;Title", expectedLen: -1},
-		{name: "OSC with cancel", input: "\x1b]0;My Title\x18", expectedLen: 10},
-		{name: "OSC empty with cancel", input: "\x1b]\x18", expectedLen: 0},
-	}
+	var tests = make([]ansiCase, len(oscCaseTests))
+	copy(tests, oscCaseTests)
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -92,17 +87,8 @@ func Test_stSequenceLengthRune(t *testing.T) {
 	t.Parallel()
 
 	errFormat := getErrFormat(t, "stSequenceLengthRune")
-	tests := []ansiCase{
-		{name: "DCS with ST terminator", input: "\x1bPq#0;2;0;0;0\x1b\\", expectedLen: 13},
-		{name: "DCS canceled by CAN", input: "\x1bPqdata\x18z", expectedLen: 5},
-		{name: "SOS with ST terminator", input: "\x1bXhello\x1b\\", expectedLen: 7},
-		{name: "PM with ST terminator", input: "\x1b^msg\x1b\\", expectedLen: 5},
-		{name: "APC with ST terminator", input: "\x1b_data\x1b\\", expectedLen: 6},
-		{name: "unterminated DCS", input: "\x1bPqpayload", expectedLen: -1},
-		{name: "unterminated SOS", input: "\x1bXhello", expectedLen: -1},
-		{name: "unterminated PM", input: "\x1b^msg", expectedLen: -1},
-		{name: "unterminated APC", input: "\x1b_data", expectedLen: -1},
-	}
+	var tests = make([]ansiCase, len(stSequenceCaseTests))
+	copy(tests, stSequenceCaseTests)
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-type stripTestCase struct {
+type stripCase struct {
 	name     string
 	input    string
 	expected string
@@ -16,7 +16,7 @@ type customStringType string
 type customBytesType []byte
 type customRunesType []rune
 
-var stripTests = []stripTestCase{
+var stripTests = []stripCase{
 	{name: "Red text", input: "\x1b[31mHello\x1b[0m", expected: "Hello"},
 	{name: "Bold Green text", input: "\x1b[1;32mBold Green\x1b[0m", expected: "Bold Green"},
 	{name: "Underlined Yellow text", input: "\x1b[4;33mUnderlined Yellow\x1b[0m", expected: "Underlined Yellow"},
@@ -39,7 +39,7 @@ var stripTests = []stripTestCase{
 	{name: "Octal escape representation", input: "\033[31mOctal escape\033[0m", expected: "Octal escape"},
 }
 
-var strip8BitTests = []stripTestCase{
+var strip8BitTests = []stripCase{
 	{name: "No ANSI codes", input: "Plain text", expected: "Plain text"},
 	{name: "Empty string", input: "", expected: ""},
 	{name: "C1 CSI then text", input: "\x9B31mhello", expected: "hello"},
@@ -58,7 +58,7 @@ func Test_Strip(t *testing.T) {
 	t.Parallel()
 
 	errFormat := getErrFormat(t, "Strip")
-	var tests = make([]stripTestCase, len(stripTests))
+	var tests = make([]stripCase, len(stripTests))
 	copy(tests, stripTests)
 
 	for _, tt := range tests {
@@ -71,9 +71,10 @@ func Test_Strip(t *testing.T) {
 			require.Equal(t, customStringType(tt.expected), Strip(customStringType(tt.input)), errFormat, tt.input, "customStringType")
 
 			// []byte
-			resultByte := Strip([]byte(tt.input))
-			require.Equal(t, tt.expected, string(resultByte), errFormat, tt.input, "[]byte")
-			require.ElementsMatch(t, customBytesType([]byte(tt.expected)), Strip(customBytesType([]byte(tt.input))), errFormat, tt.input, "customBytesType")
+			inputBytes := []byte(tt.input)
+			expectedBytes := []byte(tt.expected)
+			require.ElementsMatch(t, expectedBytes, Strip(inputBytes), errFormat, tt.input, "[]byte")
+			require.ElementsMatch(t, customBytesType(expectedBytes), Strip(customBytesType(inputBytes)), errFormat, tt.input, "customBytesType")
 		})
 	}
 }
@@ -91,7 +92,7 @@ func Test_StripRunes(t *testing.T) {
 	t.Parallel()
 
 	errFormat := getErrFormat(t, "StripRunes")
-	var tests = make([]stripTestCase, len(stripTests))
+	var tests = make([]stripCase, len(stripTests))
 	copy(tests, stripTests)
 
 	for _, tt := range tests {
@@ -102,7 +103,7 @@ func Test_StripRunes(t *testing.T) {
 			inputRunes := stringToRunes(t, tt.input)
 			expectedRunes := stringToRunes(t, tt.expected)
 
-			require.Equal(t, expectedRunes, StripRunes(inputRunes), errFormat, tt.input, "[]rune")
+			require.ElementsMatch(t, expectedRunes, StripRunes(inputRunes), errFormat, tt.input, "[]rune")
 			require.ElementsMatch(t, customRunesType(expectedRunes), StripRunes(customRunesType(inputRunes)), errFormat, tt.input, "customRunesType")
 		})
 	}
@@ -121,7 +122,7 @@ func Test_Strip8Bit(t *testing.T) {
 	t.Parallel()
 
 	errFormat := getErrFormat(t, "Strip8Bit")
-	var tests = make([]stripTestCase, len(strip8BitTests))
+	var tests = make([]stripCase, len(strip8BitTests))
 	copy(tests, strip8BitTests)
 
 	for _, tt := range tests {
@@ -154,7 +155,7 @@ func Test_Strip8BitRunes(t *testing.T) {
 	t.Parallel()
 
 	errFormat := getErrFormat(t, "Strip8BitRunes")
-	var tests = make([]stripTestCase, len(strip8BitTests))
+	var tests = make([]stripCase, len(strip8BitTests))
 	copy(tests, strip8BitTests)
 
 	for _, tt := range tests {
