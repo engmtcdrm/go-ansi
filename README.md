@@ -27,9 +27,7 @@ Package ansi provides functions for creating ANSI escape sequences and determini
 - [func Foreground24Bit\(r, g, b int\) string](<#Foreground24Bit>)
 - [func Foreground8Bit\(color int\) string](<#Foreground8Bit>)
 - [func ScrollDown\(n int\) string](<#ScrollDown>)
-- [func ScrollDownN\(n int\) string](<#ScrollDownN>)
 - [func ScrollUp\(n int\) string](<#ScrollUp>)
-- [func ScrollUpN\(n int\) string](<#ScrollUpN>)
 - [func Strip\[T \~string | \~\[\]byte\]\(input T\) T](<#Strip>)
 - [func Strip8Bit\[T \~string | \~\[\]byte\]\(input T\) T](<#Strip8Bit>)
 - [func Strip8BitRunes\[T \~\[\]rune\]\(input T\) T](<#Strip8BitRunes>)
@@ -188,21 +186,6 @@ const (
     ResetFramed    = CSI + "54m" // Reset framed and encircled.
     ResetOverlined = CSI + "55m" // Reset overlined.
     IdeogramRight  = CSI + "73m" // Ideogram right underline.
-
-    // Hidden text. Not widely supported.
-    //
-    // Deprecated: use [Hide] instead. This will be removed in v2.0.0.
-    Hidden = Hide
-
-    // Faint, decreased intensity, or dim.
-    //
-    // Deprecated: use [Dim] instead. This will be removed in v2.0.0.
-    Faint = Dim
-
-    // Reset Hidden text. Not widely supported.
-    //
-    // Deprecated: use [ResetHide] instead. This will be removed in v2.0.0.
-    ResetHidden = ResetHide
 )
 ```
 
@@ -377,17 +360,6 @@ func ScrollDown(n int) string
 
 ScrollDown scrolls the screen down n rows \(lines\). If n is less than 1, it returns an empty string.
 
-<a name="ScrollDownN"></a>
-## func [ScrollDownN](<https://github.com/engmtcdrm/go-ansi/blob/main/scroll.go#L40>)
-
-```go
-func ScrollDownN(n int) string
-```
-
-ScrollDownN scrolls the screen down n rows \(lines\). If n is less than 1, it returns an empty string.
-
-Deprecated: Use [ScrollDown](<#ScrollDown>) instead. This will be removed in v2.0.0.
-
 <a name="ScrollUp"></a>
 ## func [ScrollUp](<https://github.com/engmtcdrm/go-ansi/blob/main/scroll.go#L12>)
 
@@ -396,17 +368,6 @@ func ScrollUp(n int) string
 ```
 
 ScrollUp scrolls the screen up n rows \(lines\). If n is less than 1, it returns an empty string.
-
-<a name="ScrollUpN"></a>
-## func [ScrollUpN](<https://github.com/engmtcdrm/go-ansi/blob/main/scroll.go#L32>)
-
-```go
-func ScrollUpN(n int) string
-```
-
-ScrollUpN scrolls the screen up n rows \(lines\). If n is less than 1, it returns an empty string.
-
-Deprecated: Use [ScrollUp](<#ScrollUp>) instead. This will be removed in v2.0.0.
 
 <a name="Strip"></a>
 ## func [Strip](<https://github.com/engmtcdrm/go-ansi/blob/main/ansi.go#L9>)
@@ -418,7 +379,7 @@ func Strip[T ~string | ~[]byte](input T) T
 Strip removes all 7\-bit ANSI escape sequences from the input.
 
 <a name="Strip8Bit"></a>
-## func [Strip8Bit](<https://github.com/engmtcdrm/go-ansi/blob/main/ansi.go#L28>)
+## func [Strip8Bit](<https://github.com/engmtcdrm/go-ansi/blob/main/ansi.go#L47>)
 
 ```go
 func Strip8Bit[T ~string | ~[]byte](input T) T
@@ -436,7 +397,7 @@ func Strip8BitRunes[T ~[]rune](input T) T
 Strip8BitRunes removes all 8\-bit C1 ANSI escape sequences from the input.
 
 <a name="StripRunes"></a>
-## func [StripRunes](<https://github.com/engmtcdrm/go-ansi/blob/main/ansi.go#L47>)
+## func [StripRunes](<https://github.com/engmtcdrm/go-ansi/blob/main/ansi.go#L28>)
 
 ```go
 func StripRunes[T ~[]rune](input T) T
