@@ -11,7 +11,7 @@ func Test_escapeLengthRune(t *testing.T) {
 	t.Parallel()
 
 	errFormat := getErrFormat(t, "escapeLengthRune")
-	var tests = make([]ansiCase, len(ansiCaseTests))
+	tests := make([]ansiCase, len(ansiCaseTests))
 	copy(tests, ansiCaseTests)
 
 	for _, tt := range tests {
@@ -30,7 +30,7 @@ func Test_csiBodyLengthRune(t *testing.T) {
 	t.Parallel()
 
 	errFormat := getErrFormat(t, "csiBodyLengthRune")
-	var tests = make([]ansiCase, len(csiBodyCaseTests))
+	tests := make([]ansiCase, len(csiBodyCaseTests))
 	copy(tests, csiBodyCaseTests)
 
 	for _, tt := range tests {
@@ -49,7 +49,7 @@ func Test_intermediateThenFinalLengthRune(t *testing.T) {
 	t.Parallel()
 
 	errFormat := getErrFormat(t, "intermediateThenFinalLengthRune")
-	var tests = make([]ansiCase, len(intermediateCaseTests))
+	tests := make([]ansiCase, len(intermediateCaseTests))
 	copy(tests, intermediateCaseTests)
 
 	for _, tt := range tests {
@@ -68,7 +68,7 @@ func Test_oscLengthRune(t *testing.T) {
 	t.Parallel()
 
 	errFormat := getErrFormat(t, "oscLengthRune")
-	var tests = make([]ansiCase, len(oscCaseTests))
+	tests := make([]ansiCase, len(oscCaseTests))
 	copy(tests, oscCaseTests)
 
 	for _, tt := range tests {
@@ -87,7 +87,7 @@ func Test_stSequenceLengthRune(t *testing.T) {
 	t.Parallel()
 
 	errFormat := getErrFormat(t, "stSequenceLengthRune")
-	var tests = make([]ansiCase, len(stSequenceCaseTests))
+	tests := make([]ansiCase, len(stSequenceCaseTests))
 	copy(tests, stSequenceCaseTests)
 
 	for _, tt := range tests {
