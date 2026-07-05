@@ -302,13 +302,13 @@ func CursorUp(n int) string
 CursorUp moves the cursor up n rows \(lines\). If n is less than 1, it returns an empty string.
 
 <a name="EscapeLength"></a>
-## func [EscapeLength](<https://github.com/engmtcdrm/go-ansi/blob/main/length.go#L24>)
+## func [EscapeLength](<https://github.com/engmtcdrm/go-ansi/blob/main/length.go#L27>)
 
 ```go
 func EscapeLength[T ~string | ~[]byte | ~[]rune](input T) int
 ```
 
-EscapeLength returns the byte length of a valid 7\-bit ANSI escape sequence at the start of data, or 0 if none.
+EscapeLength returns the byte length of a valid 7\-bit ANSI escape sequence at the start of input, or 0 if none.
 
 Recognized forms \(ECMA\-48 / ISO 6429\):
 
@@ -318,7 +318,7 @@ Recognized forms \(ECMA\-48 / ISO 6429\):
 - Two\-byte: ESC \+ Fe/Fs \(0x40\-0x7E excluding above\), or Fp \(0x30\-0x3F\), or nF \(0x20\-0x2F then final\)
 
 <a name="EscapeLength8Bit"></a>
-## func [EscapeLength8Bit](<https://github.com/engmtcdrm/go-ansi/blob/main/length8.go#L16>)
+## func [EscapeLength8Bit](<https://github.com/engmtcdrm/go-ansi/blob/main/length8.go#L19>)
 
 ```go
 func EscapeLength8Bit[T ~string | ~[]byte | ~[]rune](input T) int
