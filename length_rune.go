@@ -121,7 +121,7 @@ func intermediateThenFinalLengthRune[T ~[]rune](input T) int {
 //
 // Returns:
 //   - n >= 0: consumed body length (includes BEL/ST terminator when present)
-//   - -1: not terminated in the provided data
+//   - -1: not terminated in the provided input
 //
 // OSC accepts BEL (0x07) or 7-bit ST (ESC \) as terminators by widespread
 // convention.
@@ -152,7 +152,7 @@ func oscLengthRune[T ~[]rune](input T) int {
 //
 // Returns:
 //   - n >= 0: consumed body length (includes ST terminator when present)
-//   - -1: not terminated in the provided data
+//   - -1: not terminated in the provided input
 //
 // Used for DCS, SOS, PM, and APC, which per ECMA-48 terminate with ST.
 // ST here is the 7-bit form (ESC \).

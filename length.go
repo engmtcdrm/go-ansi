@@ -10,11 +10,14 @@ const (
 	stringTerminate = '\x9C'
 )
 
-// The logic below is originally from and modified where needed
+// The logic below is originally from
 // https://github.com/clipperhouse/uax29/blob/master/graphemes/ansi.go
+//
+// It has been modified to reduce cognitive complexity, support runes, and
+// conform to terminology in this package, e.g. "input" instead of "data".
 
 // EscapeLength returns the byte length of a valid 7-bit ANSI escape
-// sequence at the start of data, or 0 if none.
+// sequence at the start of input, or 0 if none.
 //
 // Recognized forms (ECMA-48 / ISO 6429):
 //   - CSI: ESC [ then parameter bytes (0x30-0x3F), intermediate (0x20-0x2F), final (0x40-0x7E)
@@ -163,7 +166,7 @@ func intermediateThenFinalLength[T ~string | ~[]byte](input T) int {
 //
 // Returns:
 //   - n >= 0: consumed body length (includes BEL/ST terminator when present)
-//   - -1: not terminated in the provided data
+//   - -1: not terminated in the provided input
 //
 // OSC accepts BEL (0x07) or 7-bit ST (ESC \) as terminators by widespread
 // convention.
@@ -194,7 +197,7 @@ func oscLength[T ~string | ~[]byte](input T) int {
 //
 // Returns:
 //   - n >= 0: consumed body length (includes ST terminator when present)
-//   - -1: not terminated in the provided data
+//   - -1: not terminated in the provided input
 //
 // Used for DCS, SOS, PM, and APC, which per ECMA-48 terminate with ST.
 // ST here is the 7-bit form (ESC \).

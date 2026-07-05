@@ -4,6 +4,9 @@ import "reflect"
 
 // The logic below is from
 // https://github.com/clipperhouse/uax29/blob/master/graphemes/ansi8.go
+//
+// It has been modified to reduce cognitive complexity, support runes, and
+// conform to terminology in this package, e.g. "input" instead of "data".
 
 // EscapeLength8Bit returns the byte length of a valid 8-bit C1 ANSI
 // sequence at the start of input, or 0 if none.
