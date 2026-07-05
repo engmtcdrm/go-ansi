@@ -9,7 +9,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- `Strip` function now supports `[]byte` and `[]rune` input types along with `string` input type.
+- `StripRunes` function strips ANSI escape sequences from `[]rune` input type.
+- `EscapeLength` function returns the length of a valid 7-bit ANSI escape sequence at the start of input.
+- `EscapeLength8Bit` function returns the byte length of a valid 8-bit C1 ANSI sequence at the start of input.
+
+### Changed
+
+- `Strip` function now supports `[]byte` input types along with `string` input type.
+
+### Removed
+
+- Removed the following deprecated functions:
+    - `StripCodes` is deprecated and will be removed in the future. Use `Strip` instead.
+    - `Faint` is deprecated and will be removed in the future. Use `Dim` instead.
+    - `Hidden` is deprecated and will be removed in the future. Use `Hide` instead.
+    - `ResetHidden` is deprecated and will be removed in the future. Use `ResetHide` instead.
+    - `ScrollUpN` is deprecated and will be removed in the future. Use `ScrollUp` instead.
+    - `ScrollDownN` is deprecated and will be removed in the future. Use `ScrollDown` instead.
 
 ## [v1.0.4] - 2026-06-21
 

@@ -31,19 +31,4 @@ const (
 	ResetFramed    = CSI + "54m" // Reset framed and encircled.
 	ResetOverlined = CSI + "55m" // Reset overlined.
 	IdeogramRight  = CSI + "73m" // Ideogram right underline.
-
-	// Hidden text. Not widely supported.
-	//
-	// Deprecated: use [Hide] instead. This will be removed in v2.0.0.
-	Hidden = Hide
-
-	// Faint, decreased intensity, or dim.
-	//
-	// Deprecated: use [Dim] instead. This will be removed in v2.0.0.
-	Faint = Dim
-
-	// Reset Hidden text. Not widely supported.
-	//
-	// Deprecated: use [ResetHide] instead. This will be removed in v2.0.0.
-	ResetHidden = ResetHide
 )

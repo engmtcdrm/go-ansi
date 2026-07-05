@@ -24,19 +24,3 @@ func ScrollDown(n int) string {
 	}
 	return CSI + strconv.Itoa(n) + "T"
 }
-
-// ScrollUpN scrolls the screen up n rows (lines).
-// If n is less than 1, it returns an empty string.
-//
-// Deprecated: Use [ScrollUp] instead. This will be removed in v2.0.0.
-func ScrollUpN(n int) string {
-	return ScrollUp(n)
-}
-
-// ScrollDownN scrolls the screen down n rows (lines).
-// If n is less than 1, it returns an empty string.
-//
-// Deprecated: Use [ScrollDown] instead. This will be removed in v2.0.0.
-func ScrollDownN(n int) string {
-	return ScrollDown(n)
-}
