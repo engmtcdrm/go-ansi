@@ -6,6 +6,8 @@
 import "github.com/engmtcdrm/go-ansi"
 ```
 
+Package ansi provides functions for creating ANSI escape sequences and determining their lengths.
+
 ## Index
 
 - [Constants](<#constants>)
@@ -20,14 +22,16 @@ import "github.com/engmtcdrm/go-ansi"
 - [func CursorPosition\(row, column int\) string](<#CursorPosition>)
 - [func CursorPreviousLineN\(n int\) string](<#CursorPreviousLineN>)
 - [func CursorUp\(n int\) string](<#CursorUp>)
+- [func EscapeLength\[T \~string | \~\[\]byte | \~\[\]rune\]\(input T\) int](<#EscapeLength>)
+- [func EscapeLength8Bit\[T \~string | \~\[\]byte | \~\[\]rune\]\(input T\) int](<#EscapeLength8Bit>)
 - [func Foreground24Bit\(r, g, b int\) string](<#Foreground24Bit>)
 - [func Foreground8Bit\(color int\) string](<#Foreground8Bit>)
 - [func ScrollDown\(n int\) string](<#ScrollDown>)
-- [func ScrollDownN\(n int\) string](<#ScrollDownN>)
 - [func ScrollUp\(n int\) string](<#ScrollUp>)
-- [func ScrollUpN\(n int\) string](<#ScrollUpN>)
-- [func Strip\(input string\) string](<#Strip>)
-- [func StripCodes\(input string\) string](<#StripCodes>)
+- [func Strip\[T \~string | \~\[\]byte\]\(input T\) T](<#Strip>)
+- [func Strip8Bit\[T \~string | \~\[\]byte\]\(input T\) T](<#Strip8Bit>)
+- [func Strip8BitRunes\[T \~\[\]rune\]\(input T\) T](<#Strip8BitRunes>)
+- [func StripRunes\[T \~\[\]rune\]\(input T\) T](<#StripRunes>)
 
 
 ## Constants
@@ -182,21 +186,6 @@ const (
     ResetFramed    = CSI + "54m" // Reset framed and encircled.
     ResetOverlined = CSI + "55m" // Reset overlined.
     IdeogramRight  = CSI + "73m" // Ideogram right underline.
-
-    // Hidden text. Not widely supported.
-    //
-    // Deprecated: use [Hide] instead. This will be removed in v2.0.0.
-    Hidden = Hide
-
-    // Faint, decreased intensity, or dim.
-    //
-    // Deprecated: use [Dim] instead. This will be removed in v2.0.0.
-    Faint = Dim
-
-    // Reset Hidden text. Not widely supported.
-    //
-    // Deprecated: use [ResetHide] instead. This will be removed in v2.0.0.
-    ResetHidden = ResetHide
 )
 ```
 
@@ -312,6 +301,38 @@ func CursorUp(n int) string
 
 CursorUp moves the cursor up n rows \(lines\). If n is less than 1, it returns an empty string.
 
+<a name="EscapeLength"></a>
+## func [EscapeLength](<https://github.com/engmtcdrm/go-ansi/blob/main/length.go#L27>)
+
+```go
+func EscapeLength[T ~string | ~[]byte | ~[]rune](input T) int
+```
+
+EscapeLength returns the byte length of a valid 7\-bit ANSI escape sequence at the start of input, or 0 if none.
+
+Recognized forms \(ECMA\-48 / ISO 6429\):
+
+- CSI: ESC \[ then parameter bytes \(0x30\-0x3F\), intermediate \(0x20\-0x2F\), final \(0x40\-0x7E\)
+- OSC: ESC \] then payload until BEL \(0x07\), 7\-bit ST \(ESC \\\), CAN \(0x18\), or SUB \(0x1A\)
+- DCS, SOS, PM, APC: ESC P/X/^/\_ then payload until 7\-bit ST \(ESC \\\), CAN, or SUB
+- Two\-byte: ESC \+ Fe/Fs \(0x40\-0x7E excluding above\), or Fp \(0x30\-0x3F\), or nF \(0x20\-0x2F then final\)
+
+<a name="EscapeLength8Bit"></a>
+## func [EscapeLength8Bit](<https://github.com/engmtcdrm/go-ansi/blob/main/length8.go#L19>)
+
+```go
+func EscapeLength8Bit[T ~string | ~[]byte | ~[]rune](input T) int
+```
+
+EscapeLength8Bit returns the byte length of a valid 8\-bit C1 ANSI sequence at the start of input, or 0 if none.
+
+Recognized forms \(ECMA\-48 / ISO 6429\):
+
+- C1 CSI \(0x9B\) body as parameter/intermediate/final bytes
+- C1 OSC \(0x9D\) body terminated by BEL, C1 ST, CAN, or SUB
+- C1 DCS/SOS/PM/APC \(0x90/0x98/0x9E/0x9F\) body terminated by C1 ST, CAN, or SUB
+- Standalone C1 controls \(0x80..0x9F not listed above\): single byte
+
 <a name="Foreground24Bit"></a>
 ## func [Foreground24Bit](<https://github.com/engmtcdrm/go-ansi/blob/main/colors.go#L102>)
 
@@ -339,17 +360,6 @@ func ScrollDown(n int) string
 
 ScrollDown scrolls the screen down n rows \(lines\). If n is less than 1, it returns an empty string.
 
-<a name="ScrollDownN"></a>
-## func [ScrollDownN](<https://github.com/engmtcdrm/go-ansi/blob/main/scroll.go#L40>)
-
-```go
-func ScrollDownN(n int) string
-```
-
-ScrollDownN scrolls the screen down n rows \(lines\). If n is less than 1, it returns an empty string.
-
-Deprecated: Use [ScrollDown](<#ScrollDown>) instead. This will be removed in v2.0.0.
-
 <a name="ScrollUp"></a>
 ## func [ScrollUp](<https://github.com/engmtcdrm/go-ansi/blob/main/scroll.go#L12>)
 
@@ -359,35 +369,40 @@ func ScrollUp(n int) string
 
 ScrollUp scrolls the screen up n rows \(lines\). If n is less than 1, it returns an empty string.
 
-<a name="ScrollUpN"></a>
-## func [ScrollUpN](<https://github.com/engmtcdrm/go-ansi/blob/main/scroll.go#L32>)
-
-```go
-func ScrollUpN(n int) string
-```
-
-ScrollUpN scrolls the screen up n rows \(lines\). If n is less than 1, it returns an empty string.
-
-Deprecated: Use [ScrollUp](<#ScrollUp>) instead. This will be removed in v2.0.0.
-
 <a name="Strip"></a>
-## func [Strip](<https://github.com/engmtcdrm/go-ansi/blob/main/ansi.go#L15>)
+## func [Strip](<https://github.com/engmtcdrm/go-ansi/blob/main/ansi.go#L9>)
 
 ```go
-func Strip(input string) string
+func Strip[T ~string | ~[]byte](input T) T
 ```
 
-Strip removes all ANSI escape codes from the input string.
+Strip removes all 7\-bit ANSI escape sequences from the input.
 
-<a name="StripCodes"></a>
-## func [StripCodes](<https://github.com/engmtcdrm/go-ansi/blob/main/ansi.go#L22>)
+<a name="Strip8Bit"></a>
+## func [Strip8Bit](<https://github.com/engmtcdrm/go-ansi/blob/main/ansi.go#L47>)
 
 ```go
-func StripCodes(input string) string
+func Strip8Bit[T ~string | ~[]byte](input T) T
 ```
 
-StripCodes removes all ANSI escape codes from the input string.
+Strip8Bit removes all 8\-bit C1 ANSI escape sequences from the input.
 
-Deprecated: Use [Strip](<#Strip>) instead. This will be removed in v2.0.0.
+<a name="Strip8BitRunes"></a>
+## func [Strip8BitRunes](<https://github.com/engmtcdrm/go-ansi/blob/main/ansi.go#L66>)
+
+```go
+func Strip8BitRunes[T ~[]rune](input T) T
+```
+
+Strip8BitRunes removes all 8\-bit C1 ANSI escape sequences from the input.
+
+<a name="StripRunes"></a>
+## func [StripRunes](<https://github.com/engmtcdrm/go-ansi/blob/main/ansi.go#L28>)
+
+```go
+func StripRunes[T ~[]rune](input T) T
+```
+
+StripRunes removes all 7\-bit ANSI escape sequences from input.
 
 Generated by [gomarkdoc](<https://github.com/princjef/gomarkdoc>)
