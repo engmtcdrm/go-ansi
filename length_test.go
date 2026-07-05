@@ -44,10 +44,7 @@ func Benchmark_EscapeLength(b *testing.B) {
 			b.ResetTimer()
 
 			for i := 0; i < b.N; i++ {
-				returnedLen := EscapeLength(tt.input)
-				if returnedLen != tt.expectedLen {
-					b.Fatalf("EscapeLength returned %d, expected %d", returnedLen, tt.expectedLen)
-				}
+				_ = EscapeLength(tt.input)
 			}
 		})
 	}
@@ -57,6 +54,7 @@ func Benchmark_EscapeLength(b *testing.B) {
 func Test_EscapeLength(t *testing.T) {
 	t.Parallel()
 
+	errFormat := "EscapeLength(%q) returned incorrect length for type '%T'"
 	var tests = make([]ansiCase, len(ansiCaseTests))
 	copy(tests, ansiCaseTests)
 
@@ -64,14 +62,18 @@ func Test_EscapeLength(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			type customType string
-			type customRunes []rune
+			// string
+			require.Equal(t, tt.expectedLen, EscapeLength(tt.input), errFormat, tt.input, "")
+			require.Equal(t, tt.expectedLen, EscapeLength(customStringType(tt.input)), errFormat, tt.input, customStringType(""))
 
-			require.Equal(t, tt.expectedLen, EscapeLength(tt.input))
-			require.Equal(t, tt.expectedLen, EscapeLength([]byte(tt.input)))
-			require.Equal(t, tt.expectedLen, EscapeLength([]rune(tt.input)))
-			require.Equal(t, tt.expectedLen, EscapeLength(customType(tt.input)))
-			require.Equal(t, tt.expectedLen, EscapeLength(customRunes([]rune(tt.input))))
+			// []byte
+			require.Equal(t, tt.expectedLen, EscapeLength([]byte(tt.input)), errFormat, tt.input, []byte(nil))
+			require.Equal(t, tt.expectedLen, EscapeLength(customBytesType([]byte(tt.input))), errFormat, tt.input, customBytesType([]byte(nil)))
+
+			// []rune
+			inputRunes := stringToRunes(t, tt.input)
+			require.Equal(t, tt.expectedLen, EscapeLength(inputRunes), errFormat, tt.input, []rune(nil))
+			require.Equal(t, tt.expectedLen, EscapeLength(customRunesType(inputRunes)), errFormat, tt.input, customRunesType([]rune(nil)))
 		})
 	}
 }
@@ -80,6 +82,7 @@ func Test_EscapeLength(t *testing.T) {
 func Test_escapeLength(t *testing.T) {
 	t.Parallel()
 
+	errFormat := "escapeLength(%q) returned incorrect length for type '%T'"
 	var tests = make([]ansiCase, len(ansiCaseTests))
 	copy(tests, ansiCaseTests)
 
@@ -87,8 +90,13 @@ func Test_escapeLength(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			returnedLen := escapeLength(tt.input)
-			require.Equal(t, tt.expectedLen, returnedLen, "escapeLength returned %d, expected %d", returnedLen, tt.expectedLen)
+			// string
+			require.Equal(t, tt.expectedLen, escapeLength(tt.input), errFormat, tt.input, "")
+			require.Equal(t, tt.expectedLen, escapeLength(customStringType(tt.input)), errFormat, tt.input, customStringType(""))
+
+			// []byte
+			require.Equal(t, tt.expectedLen, escapeLength([]byte(tt.input)), errFormat, tt.input, []byte(nil))
+			require.Equal(t, tt.expectedLen, escapeLength(customBytesType([]byte(tt.input))), errFormat, tt.input, customBytesType([]byte(nil)))
 		})
 	}
 }
@@ -97,6 +105,7 @@ func Test_escapeLength(t *testing.T) {
 func Test_csiBodyLength(t *testing.T) {
 	t.Parallel()
 
+	errFormat := "csiBodyLength(%q) returned incorrect length for type '%T'"
 	tests := []ansiCase{
 		{name: "SGR reset", input: "\x1b[0m", expectedLen: 2},
 		{name: "SGR red then text", input: "\x1b[31mhello", expectedLen: 3},
@@ -111,8 +120,13 @@ func Test_csiBodyLength(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			returnedLen := csiBodyLength(tt.input[2:])
-			require.Equal(t, tt.expectedLen, returnedLen, "csiBodyLength returned %d, expected %d", returnedLen, tt.expectedLen)
+			// string
+			require.Equal(t, tt.expectedLen, csiBodyLength(tt.input[2:]), errFormat, tt.input, "")
+			require.Equal(t, tt.expectedLen, csiBodyLength(customStringType(tt.input[2:])), errFormat, tt.input, customStringType(""))
+
+			// []byte
+			require.Equal(t, tt.expectedLen, csiBodyLength([]byte(tt.input[2:])), errFormat, tt.input, []byte(nil))
+			require.Equal(t, tt.expectedLen, csiBodyLength(customBytesType([]byte(tt.input[2:]))), errFormat, tt.input, customBytesType([]byte(nil)))
 		})
 	}
 }
@@ -121,6 +135,7 @@ func Test_csiBodyLength(t *testing.T) {
 func Test_oscLength(t *testing.T) {
 	t.Parallel()
 
+	errFormat := "oscLength(%q) returned incorrect length"
 	tests := []ansiCase{
 		{name: "OSC window title then BEL", input: "\x1b]0;My Title\x07", expectedLen: 11},
 		{name: "OSC window title then ST", input: "\x1b]0;Title\x1b\\", expectedLen: 9},
@@ -133,8 +148,13 @@ func Test_oscLength(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			returnedLen := oscLength(tt.input[2:])
-			require.Equal(t, tt.expectedLen, returnedLen, "oscLength returned %d, expected %d", returnedLen, tt.expectedLen)
+			// string
+			require.Equal(t, tt.expectedLen, oscLength(tt.input[2:]), errFormat, tt.input)
+			require.Equal(t, tt.expectedLen, oscLength(customStringType(tt.input[2:])), errFormat, tt.input)
+
+			// []byte
+			require.Equal(t, tt.expectedLen, oscLength([]byte(tt.input[2:])), errFormat, tt.input)
+			require.Equal(t, tt.expectedLen, oscLength(customBytesType([]byte(tt.input[2:]))), errFormat, tt.input)
 		})
 	}
 }
@@ -143,6 +163,7 @@ func Test_oscLength(t *testing.T) {
 func Test_stSequenceLength(t *testing.T) {
 	t.Parallel()
 
+	errFormat := "stSequenceLength(%q) returned incorrect length"
 	tests := []ansiCase{
 		{name: "DCS with ST terminator", input: "\x1bPq#0;2;0;0;0\x1b\\", expectedLen: 13},
 		{name: "DCS canceled by CAN", input: "\x1bPqdata\x18z", expectedLen: 5},
@@ -159,8 +180,13 @@ func Test_stSequenceLength(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			returnedLen := stSequenceLength(tt.input[2:])
-			require.Equal(t, tt.expectedLen, returnedLen, "stSequenceLength returned %d, expected %d", returnedLen, tt.expectedLen)
+			// string
+			require.Equal(t, tt.expectedLen, stSequenceLength(tt.input[2:]), errFormat, tt.input)
+			require.Equal(t, tt.expectedLen, stSequenceLength(customStringType(tt.input[2:])), errFormat, tt.input)
+
+			// []byte
+			require.Equal(t, tt.expectedLen, stSequenceLength([]byte(tt.input[2:])), errFormat, tt.input)
+			require.Equal(t, tt.expectedLen, stSequenceLength(customBytesType([]byte(tt.input[2:]))), errFormat, tt.input)
 		})
 	}
 }

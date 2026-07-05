@@ -10,6 +10,7 @@ import (
 func Test_escapeLength8BitRune(t *testing.T) {
 	t.Parallel()
 
+	errFormat := "escapeLength8BitRune(%q) returned incorrect length"
 	tests := []ansiCase{
 		{name: "empty input", input: "", expectedLen: 0},
 		{name: "C1 CSI with empty body", input: "\x9B", expectedLen: 0},
@@ -33,13 +34,9 @@ func Test_escapeLength8BitRune(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			var runeInput []rune
-			for _, b := range []byte(tt.input) {
-				runeInput = append(runeInput, rune(b))
-			}
-
-			returnedLen := escapeLength8BitRune(runeInput)
-			require.Equal(t, tt.expectedLen, returnedLen, "escapeLength8BitRune returned %d, expected %d", returnedLen, tt.expectedLen)
+			inputRunes := stringToRunes(t, tt.input)
+			require.Equal(t, tt.expectedLen, escapeLength8BitRune(inputRunes), errFormat, tt.input)
+			require.Equal(t, tt.expectedLen, escapeLength8BitRune(customRunesType(inputRunes)), errFormat, tt.input)
 		})
 	}
 }
@@ -48,6 +45,7 @@ func Test_escapeLength8BitRune(t *testing.T) {
 func Test_oscLengthC1Rune(t *testing.T) {
 	t.Parallel()
 
+	errFormat := "oscLengthC1Rune(%q) returned incorrect length"
 	tests := []ansiCase{
 		{name: "OSC empty input", input: "\x9D", expectedLen: -1},
 		{name: "OSC with BEL terminator", input: "\x9D0;Title\x07", expectedLen: 8},
@@ -61,13 +59,10 @@ func Test_oscLengthC1Rune(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			var runeInput []rune
-			for _, b := range []byte(tt.input) {
-				runeInput = append(runeInput, rune(b))
-			}
+			inputRunes := stringToRunes(t, tt.input[1:])
 
-			returnedLen := oscLengthC1Rune(runeInput[1:])
-			require.Equal(t, tt.expectedLen, returnedLen, "oscLengthC1Rune returned %d, expected %d", returnedLen, tt.expectedLen)
+			require.Equal(t, tt.expectedLen, oscLengthC1Rune(inputRunes), errFormat, tt.input)
+			require.Equal(t, tt.expectedLen, oscLengthC1Rune(customRunesType(inputRunes)), errFormat, tt.input)
 		})
 	}
 }
@@ -76,6 +71,7 @@ func Test_oscLengthC1Rune(t *testing.T) {
 func Test_stSequenceLengthC1Rune(t *testing.T) {
 	t.Parallel()
 
+	errFormat := "stSequenceLengthC1Rune(%q) returned incorrect length"
 	tests := []ansiCase{
 		{name: "DCS with C1 ST terminator", input: "\x90qpayload\x9C", expectedLen: 9},
 		{name: "DCS canceled by CAN", input: "\x90qpayload\x18x", expectedLen: 8},
@@ -92,13 +88,9 @@ func Test_stSequenceLengthC1Rune(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			var runeInput []rune
-			for _, b := range []byte(tt.input) {
-				runeInput = append(runeInput, rune(b))
-			}
-
-			returnedLen := stSequenceLengthC1Rune(runeInput[1:])
-			require.Equal(t, tt.expectedLen, returnedLen, "stSequenceLengthC1Rune returned %d, expected %d", returnedLen, tt.expectedLen)
+			inputRunes := stringToRunes(t, tt.input[1:])
+			require.Equal(t, tt.expectedLen, stSequenceLengthC1Rune(inputRunes), errFormat, tt.input)
+			require.Equal(t, tt.expectedLen, stSequenceLengthC1Rune(customRunesType(inputRunes)), errFormat, tt.input)
 		})
 	}
 }

@@ -6,35 +6,72 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-// Tests for [escapeLength8Bit] function.
-func Test_escapeLength8Bit(t *testing.T) {
+var ansiCase8BitTests = []ansiCase{
+	{name: "empty input", input: "", expectedLen: 0},
+	{name: "C1 CSI with empty body", input: "\x9B", expectedLen: 0},
+	{name: "C1 CSI then text", input: "\x9B31mhello", expectedLen: 4},
+	{name: "C1 CSI multiple params", input: "\x9B1;2;3m", expectedLen: 7},
+	{name: "C1 OSC with C1 ST", input: "\x9D0;Title\x9C", expectedLen: 9},
+	{name: "C1 OSC with 7-bit ST is not parsed as one sequence", input: "\x9D0;Title\x1b\\", expectedLen: 0},
+	{name: "C1 DCS with C1 ST", input: "\x90qpayload\x9C", expectedLen: 10},
+	{name: "C1 DCS with 7-bit ST is not parsed as one sequence", input: "\x90qpayload\x1b\\", expectedLen: 0},
+	{name: "C1 DCS canceled by CAN", input: "\x90qpayload\x18x", expectedLen: 9},
+	{name: "C1 SOS with C1 ST", input: "\x98hello\x9C", expectedLen: 7},
+	{name: "C1 PM with 7-bit ST is not parsed as one sequence", input: "\x9Emsg\x1b\\", expectedLen: 0},
+	{name: "C1 APC with C1 ST", input: "\x9Fdata\x9C", expectedLen: 6},
+	{name: "single C1 Fe control", input: "\x84", expectedLen: 1},
+	{name: "C1 OSC unterminated", input: "\x9D0;title", expectedLen: 0},
+	{name: "C1 DCS unterminated", input: "\x90data", expectedLen: 0},
+	{name: "7-bit ESC sequence is not parsed", input: "\x1b[31mhello", expectedLen: 0},
+}
+
+// Tests for [EscapeLength8Bit] function.
+func Test_EscapeLength8Bit(t *testing.T) {
 	t.Parallel()
 
-	tests := []ansiCase{
-		{name: "empty input", input: "", expectedLen: 0},
-		{name: "C1 CSI with empty body", input: "\x9B", expectedLen: 0},
-		{name: "C1 CSI then text", input: "\x9B31mhello", expectedLen: 4},
-		{name: "C1 CSI multiple params", input: "\x9B1;2;3m", expectedLen: 7},
-		{name: "C1 OSC with C1 ST", input: "\x9D0;Title\x9C", expectedLen: 9},
-		{name: "C1 OSC with 7-bit ST is not parsed as one sequence", input: "\x9D0;Title\x1b\\", expectedLen: 0},
-		{name: "C1 DCS with C1 ST", input: "\x90qpayload\x9C", expectedLen: 10},
-		{name: "C1 DCS with 7-bit ST is not parsed as one sequence", input: "\x90qpayload\x1b\\", expectedLen: 0},
-		{name: "C1 DCS canceled by CAN", input: "\x90qpayload\x18x", expectedLen: 9},
-		{name: "C1 SOS with C1 ST", input: "\x98hello\x9C", expectedLen: 7},
-		{name: "C1 PM with 7-bit ST is not parsed as one sequence", input: "\x9Emsg\x1b\\", expectedLen: 0},
-		{name: "C1 APC with C1 ST", input: "\x9Fdata\x9C", expectedLen: 6},
-		{name: "single C1 Fe control", input: "\x84", expectedLen: 1},
-		{name: "C1 OSC unterminated", input: "\x9D0;title", expectedLen: 0},
-		{name: "C1 DCS unterminated", input: "\x90data", expectedLen: 0},
-		{name: "7-bit ESC sequence is not parsed", input: "\x1b[31mhello", expectedLen: 0},
-	}
+	errFormat := "EscapeLength8Bit(%q) returned incorrect length"
+	var tests = make([]ansiCase, len(ansiCase8BitTests))
+	copy(tests, ansiCase8BitTests)
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			returnedLen := escapeLength8Bit(tt.input)
-			require.Equal(t, tt.expectedLen, returnedLen, "escapeLength8Bit returned %d, expected %d", returnedLen, tt.expectedLen)
+			// strings
+			require.Equal(t, tt.expectedLen, EscapeLength8Bit(tt.input), errFormat, tt.input)
+			require.Equal(t, tt.expectedLen, EscapeLength8Bit(customStringType(tt.input)), errFormat, tt.input)
+
+			// []bytes
+			require.Equal(t, tt.expectedLen, EscapeLength8Bit([]byte(tt.input)), errFormat, tt.input)
+			require.Equal(t, tt.expectedLen, EscapeLength8Bit(customBytesType([]byte(tt.input))), errFormat, tt.input)
+
+			// []runes
+			inputRunes := stringToRunes(t, tt.input)
+			require.Equal(t, tt.expectedLen, EscapeLength8Bit(inputRunes), errFormat, tt.input)
+			require.Equal(t, tt.expectedLen, EscapeLength8Bit(customRunesType(inputRunes)), errFormat, tt.input)
+		})
+	}
+}
+
+// Tests for [escapeLength8Bit] function.
+func Test_escapeLength8Bit(t *testing.T) {
+	t.Parallel()
+
+	errFormat := "escapeLength8Bit(%q) returned incorrect length"
+	var tests = make([]ansiCase, len(ansiCase8BitTests))
+	copy(tests, ansiCase8BitTests)
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			// strings
+			require.Equal(t, tt.expectedLen, escapeLength8Bit(tt.input), errFormat, tt.input)
+			require.Equal(t, tt.expectedLen, escapeLength8Bit(customStringType(tt.input)), errFormat, tt.input)
+
+			// []bytes
+			require.Equal(t, tt.expectedLen, escapeLength8Bit([]byte(tt.input)), errFormat, tt.input)
+			require.Equal(t, tt.expectedLen, escapeLength8Bit(customBytesType([]byte(tt.input))), errFormat, tt.input)
 		})
 	}
 }
@@ -43,6 +80,7 @@ func Test_escapeLength8Bit(t *testing.T) {
 func Test_oscLengthC1(t *testing.T) {
 	t.Parallel()
 
+	errFormat := "oscLengthC1(%q) returned incorrect length"
 	tests := []ansiCase{
 		{name: "OSC empty input", input: "\x9D", expectedLen: -1},
 		{name: "OSC with BEL terminator", input: "\x9D0;Title\x07", expectedLen: 8},
@@ -56,8 +94,13 @@ func Test_oscLengthC1(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			returnedLen := oscLengthC1(tt.input[1:])
-			require.Equal(t, tt.expectedLen, returnedLen, "oscLengthC1 returned %d, expected %d", returnedLen, tt.expectedLen)
+			// strings
+			require.Equal(t, tt.expectedLen, oscLengthC1(tt.input[1:]), errFormat, tt.input)
+			require.Equal(t, tt.expectedLen, oscLengthC1(customStringType(tt.input[1:])), errFormat, tt.input)
+
+			// []bytes
+			require.Equal(t, tt.expectedLen, oscLengthC1([]byte(tt.input[1:])), errFormat, tt.input)
+			require.Equal(t, tt.expectedLen, oscLengthC1(customBytesType([]byte(tt.input[1:]))), errFormat, tt.input)
 		})
 	}
 }
@@ -66,6 +109,7 @@ func Test_oscLengthC1(t *testing.T) {
 func Test_stSequenceLengthC1(t *testing.T) {
 	t.Parallel()
 
+	errFormat := "stSequenceLengthC1(%q) returned incorrect length"
 	tests := []ansiCase{
 		{name: "DCS with C1 ST terminator", input: "\x90qpayload\x9C", expectedLen: 9},
 		{name: "DCS canceled by CAN", input: "\x90qpayload\x18x", expectedLen: 8},
@@ -82,8 +126,13 @@ func Test_stSequenceLengthC1(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			returnedLen := stSequenceLengthC1(tt.input[1:])
-			require.Equal(t, tt.expectedLen, returnedLen, "stSequenceLengthC1 returned %d, expected %d", returnedLen, tt.expectedLen)
+			// strings
+			require.Equal(t, tt.expectedLen, stSequenceLengthC1(tt.input[1:]), errFormat, tt.input)
+			require.Equal(t, tt.expectedLen, stSequenceLengthC1(customStringType(tt.input[1:])), errFormat, tt.input)
+
+			// []bytes
+			require.Equal(t, tt.expectedLen, stSequenceLengthC1([]byte(tt.input[1:])), errFormat, tt.input)
+			require.Equal(t, tt.expectedLen, stSequenceLengthC1(customBytesType([]byte(tt.input[1:]))), errFormat, tt.input)
 		})
 	}
 }

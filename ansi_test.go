@@ -12,6 +12,10 @@ type stripTestCase struct {
 	expected string
 }
 
+type customStringType string
+type customBytesType []byte
+type customRunesType []rune
+
 var stripTests = []stripTestCase{
 	{name: "Red text", input: "\x1b[31mHello\x1b[0m", expected: "Hello"},
 	{name: "Bold Green text", input: "\x1b[1;32mBold Green\x1b[0m", expected: "Bold Green"},
@@ -53,24 +57,25 @@ func Benchmark_Strip(b *testing.B) {
 func Test_Strip(t *testing.T) {
 	t.Parallel()
 
+	errFormat := "Strip(%q) returned incorrect result for type '%s'"
 	var tests = make([]stripTestCase, len(stripTests))
 	copy(tests, stripTests)
 
-	type customType string
-
 	for _, tt := range tests {
-
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
+			// string
 			result := Strip(tt.input)
-			require.Equal(t, tt.expected, result, "Strip(%q) = %q; want %q", tt.input, result, tt.expected)
+			require.Equal(t, tt.expected, result, errFormat, tt.input, "string")
+			resultCustomString := Strip(customStringType(tt.input))
+			require.Equal(t, customStringType(tt.expected), resultCustomString, errFormat, tt.input, "customStringType")
 
+			// []byte
 			resultByte := Strip([]byte(tt.input))
-			require.Equal(t, tt.expected, string(resultByte), "Strip([]byte(%q)) = %q; want %q", tt.input, resultByte, tt.expected)
-
-			resultCustom := Strip(customType(tt.input))
-			require.Equal(t, customType(tt.expected), resultCustom, "Strip(customType(%q)) = %q; want %q", tt.input, resultCustom, tt.expected)
+			require.Equal(t, tt.expected, string(resultByte), errFormat, tt.input, "[]byte")
+			resultCustomBytes := Strip(customBytesType([]byte(tt.input)))
+			require.ElementsMatch(t, customBytesType([]byte(tt.expected)), resultCustomBytes, errFormat, tt.input, "customBytesType")
 		})
 	}
 }
@@ -87,22 +92,20 @@ func Benchmark_StripRunes(b *testing.B) {
 func Test_StripRunes(t *testing.T) {
 	t.Parallel()
 
+	errFormat := "StripRunes(%q) returned incorrect result for type '%T'"
 	var tests = make([]stripTestCase, len(stripTests))
 	copy(tests, stripTests)
-
-	type customType []rune
 
 	for _, tt := range tests {
 
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			resultRune := StripRunes([]rune(tt.input))
-			require.Equal(t, tt.expected, string(resultRune), "Strip([]rune(%q)) = %q; want %q", tt.input, resultRune, tt.expected)
+			inputRunes := stringToRunes(t, tt.input)
+			expectedRunes := stringToRunes(t, tt.expected)
 
-			resultCustom2 := StripRunes(customType([]rune(tt.input)))
-			resultCustomExpected := customType([]rune(tt.expected))
-			require.ElementsMatch(t, resultCustomExpected, resultCustom2, "Strip(customType2(%q)) = %q; want %q", tt.input, resultCustom2, tt.expected)
+			require.Equal(t, expectedRunes, StripRunes(inputRunes), errFormat, tt.input, []rune(nil))
+			require.ElementsMatch(t, customRunesType(expectedRunes), StripRunes(customRunesType(inputRunes)), errFormat, tt.input, customRunesType([]rune(nil)))
 		})
 	}
 }
@@ -163,11 +166,7 @@ func Test_Strip8BitRunes(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			var inputRunes []rune
-			for _, b := range []byte(tt.input) {
-				inputRunes = append(inputRunes, rune(b))
-			}
-
+			inputRunes := stringToRunes(t, tt.input)
 			resultRune := Strip8BitRunes(inputRunes)
 			require.Equal(t, tt.expected, string(resultRune), "Strip([]rune(%q)) = %q; want %q", tt.input, resultRune, tt.expected)
 
